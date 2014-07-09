@@ -16,6 +16,8 @@ namespace nix {
 namespace valid {
 
     /**
+     * @brief Message struct with entity id and msg string
+     * 
      * Struct with message text and id string to save a message and the
      * entity id together, used by {@link Results}.
      */
@@ -30,6 +32,8 @@ namespace valid {
     };
 
     /**
+     * @brief Helper to check classes for an "id" method via SFINAE
+     * 
      * Helper class that checks whether a given class or struct has
      * a method called "id"
      * USAGE: hasID<TOBJ>::value
@@ -62,6 +66,8 @@ namespace valid {
 #endif
 
     /**
+     * @brief Helper calling "id" method in class if and only if it exists (SFINAE)
+     * 
      * Helper class with "get" method that will execute a given
      * objects "id" method & return result if "HAS_ID" template param
      * is true and return string "unknown" otherwise.

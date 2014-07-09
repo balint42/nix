@@ -19,11 +19,14 @@ namespace nix {
 namespace valid {
 
 /**
-  * Generic validator
+  * @brief Generic validator
+  * 
+  * Function taking a list of conditions that it will all execute and
+  * return the results as one merged {@link Result} object
   *
-  * @param initializer_list initializer list of conditions
+  * @param li initializer list of conditions
   *
-  * @returns object The validation results as {@Result} object
+  * @returns The validation results as {@link Result} object
   */
 NIXAPI Result validate(std::initializer_list<condition> li);
 

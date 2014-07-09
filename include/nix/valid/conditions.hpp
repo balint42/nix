@@ -22,23 +22,27 @@ namespace nix {
 namespace valid {
 
     /**
+     * @brief return type of conditions {@link should} & {@link must}
+     * 
      * Actual condition type, return type of conditions functionals
      */
     typedef std::function<Result(void)> condition;
 
     /**
+     * @brief creates condition throwing error if check fails
+     * 
      * Creates a condition check that produces an error with the given
      * message if the given function call's return value does not pass
      * the test.
      * Also catches any errors occuring on execution of the given
      * function call.
      *
-     * @param pointer-to-object Parent object
-     * @param pointer-to-member Getter method in parent object
+     * @param parent     Parent object
+     * @param get        Getter method in parent object (pointer-to-member)
      * @param check      The test itself (e.g. notFalse or notEmpty)
-     * @param string     The message to produce if the test fails.
+     * @param msg        The message to produce if the test fails.
      *
-     * @returns {Function} The created condition check.
+     * @returns The created, callable condition of type condition
      */
     template<typename TOBJ, typename TBASEOBJ, typename TRET, typename TCHECK>
     condition
@@ -68,18 +72,20 @@ namespace valid {
     }
 
     /**
+     * @brief creates condition throwing warning if check fails
+     * 
      * Creates a condition check that produces a warning with the given
      * message if the given function call's return value does not pass
      * the test.
      * Also catches any errors occuring on execution of the given
      * function call.
      *
-     * @param pointer-to-object Parent object
-     * @param pointer-to-member Getter method in parent object
+     * @param parent     Parent object
+     * @param get        Getter method in parent object (pointer-to-member)
      * @param check      The test itself (e.g. notFalse or notEmpty)
-     * @param string     The message to produce if the test fails.
+     * @param msg        The message to produce if the test fails.
      *
-     * @returns {Function} The created condition check.
+     * @returns The created, callable condition of type condition
      */
     template<typename TOBJ, typename TBASEOBJ, typename TRET, typename TCHECK>
     condition
