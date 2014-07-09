@@ -91,6 +91,16 @@ Result Result::concat(const Result &result) {
     return *this;
 }
 
+Result Result::addError(const Message &error) {
+    errors.push_back(error);
+    return *this;
+}
+
+Result Result::addWarning(const Message &warning) {
+    warnings.push_back(warning);
+    return *this;
+}
+
 bool Result::ok() const {
     return (errors.size() == 0) && (warnings.size() == 0);
 }

@@ -10,6 +10,7 @@
 #define NIX_HELPER_H
 
 #include <string>
+#include "nix/Platform.hpp"
 
 namespace nix {
 namespace valid {
@@ -18,7 +19,7 @@ namespace valid {
      * Struct with message text and id string to save a message and the
      * entity id together, used by {@link Results}.
      */
-    struct Message {
+    struct NIXAPI Message {
         std::string id;
         std::string msg;
         

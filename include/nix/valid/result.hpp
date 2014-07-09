@@ -143,6 +143,22 @@ public:
     Result concat(const Result &result);
 
     /**
+     * Adds an error message to this {@link Result}
+     * object and returns a reference to this object.
+     *
+     * @return Result
+     */
+    Result addError(const Message &error);
+
+    /**
+     * Adds a warning message to this {@link Result}
+     * object and returns a reference to this object.
+     *
+     * @return Result
+     */
+    Result addWarning(const Message &warning);
+
+    /**
      * Returns true if neither errors nor warnings have been added,
      * thus both vectors are empty. Returns false otherwise.
      *
