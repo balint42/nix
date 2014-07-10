@@ -365,14 +365,12 @@ public:
     valid::Result validate() {
         valid::Result result_base = base::NamedEntity<base::ISection>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-            valid::should(*this, &Section::link, valid::notFalse(), "link is not set!"),
-            valid::should(*this, &Section::repository, valid::notFalse(), "repository is not set!"),
-            valid::should(*this, &Section::mapping, valid::notFalse(), "mapping is not set!"),
-            valid::should(*this, &Section::sectionCount, valid::isGreater(0), "sections are not set!"),
-            valid::should(*this, &Section::propertyCount, valid::isGreater(0), "properties are not set!")
+            valid::should(*this, &Section::sectionCount, valid::isEqual<bool>(util::hasEmptyEntity(sections())), "Section has empty sub sections!")
         });
         
-        return result.concat(result_base);
+        result.concat(result_base);
+        
+        return result;
     }
 
 

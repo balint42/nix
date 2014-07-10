@@ -223,6 +223,8 @@ std::string numToStr(T number) {
 }
 
 /**
+ * @brief Convert string to number
+ * 
  * Convert a string representing a number into a number.
  *
  * @param str   The string to convert.
@@ -234,6 +236,27 @@ T strToNum(const std::string &str) {
     std::stringstream s(str);
     T number;
     return s >> number ? number : 0;
+}
+
+/**
+ * @brief check stl container for empty entities
+ * 
+ * Loop through given stl container and check if any nix entity it 
+ * contains is empty
+ *
+ * @param container   The container to loop & check for empty entities
+ *
+ * @return true if the container contains any empty nix entities
+ */
+template<typename T>
+bool hasEmptyEntity(const T container) {
+    bool has_empty = false;
+    
+    for (auto it = container.begin() ; it != container.end() ; ++it) {
+        has_empty = *it == boost::none;
+    }
+    
+    return has_empty;
 }
 
 /*
