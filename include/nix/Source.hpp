@@ -198,7 +198,7 @@ public:
     valid::Result validate() {
         valid::Result result_base = base::EntityWithMetadata<base::ISource>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-            valid::should(*this, &Source::sourceCount, valid::isGreater(0), "sources are not set!")
+            valid::should(*this, &Section::sourceCount, valid::isEqual<bool>(util::hasEmptyEntity(sources())), "Source has empty sub sources!")
         });
         
         return result.concat(result_base);
