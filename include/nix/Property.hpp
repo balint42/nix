@@ -218,8 +218,10 @@ public:
             // TODO: dataType to be tested too?
         });
         
-        if(!(util::isSIUnit(*unit()) || util::isCompoundSIUnit(*unit())) && unit()) {
-            result_sub.addError(valid::Message(id(), "Unit is not SI or composite of SI units!"));
+        if(unit()) {
+            if(!(util::isSIUnit(*unit()) || util::isCompoundSIUnit(*unit()))) {
+                result_sub.addError(valid::Message(id(), "Unit is not SI or composite of SI units!"));
+            }
         }
         
         result.concat(result_sub);

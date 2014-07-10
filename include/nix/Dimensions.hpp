@@ -310,11 +310,13 @@ public:
             valid::must(*this, &SampledDimension::dimensionType, valid::isEqual<DimensionType>(DimensionType::Sample), "dimension type is not correct!")
         });
         
-        if(!util::isSIUnit(*unit()) && unit()) {
-            result_sub.concat(valid::validate(std::initializer_list<valid::condition> {
-                valid::should(*this, &SampledDimension::offset, valid::isFalse(), "offset is set, but no valid unit set!")
-            }));
-            result_sub.addError(valid::Message(util::numToStr(index()), "Unit is not an atomic SI. Note: So far composite units are not supported!"));
+        if(unit()) {
+            if(!util::isSIUnit(*unit())) {
+                result_sub.concat(valid::validate(std::initializer_list<valid::condition> {
+                    valid::should(*this, &SampledDimension::offset, valid::isFalse(), "offset is set, but no valid unit set!")
+                }));
+                result_sub.addError(valid::Message(util::numToStr(index()), "Unit is not an atomic SI. Note: So far composite units are not supported!"));
+            }
         }
         
         result.concat(result_sub);
@@ -560,8 +562,10 @@ public:
             valid::must(*this, &RangeDimension::dimensionType, valid::isEqual<DimensionType>(DimensionType::Range), "dimension type is not correct!")
         });
         
-        if(!util::isSIUnit(*unit()) && unit()) {
-            result_sub.addError(valid::Message(util::numToStr(index()), "Unit is not an atomic SI. Note: So far composite units are not supported!"));
+        if(unit()) {
+            if(!util::isSIUnit(*unit())) {
+                result_sub.addError(valid::Message(util::numToStr(index()), "Unit is not an atomic SI. Note: So far composite units are not supported!"));
+            }
         }
         if(!std::is_sorted(ticks().begin(), ticks().end())) {
             result_sub.addError(valid::Message(util::numToStr(index()), "Ticks are not sorted!"));
