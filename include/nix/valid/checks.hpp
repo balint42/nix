@@ -123,6 +123,18 @@ namespace valid {
             return value == val;
         }
     };
+    // needed because: for bizarre reasons bool converts to int when compared to boost::optional
+    template<>
+    struct isEqual<bool> {
+        const bool value;
+        
+        isEqual(bool value) : value(value) {}
+        
+        template<typename T2>
+        bool operator()(const T2 &val) const {
+            return value ? !!val : !val;
+        }
+    };
 
     /**
      * @brief Check if given value casts to boolean true

@@ -317,7 +317,6 @@ public:
             result_sub.addError(valid::Message(util::numToStr(index()), "Unit is not an atomic SI. Note: So far composite units are not supported!"));
         }
         
-        
         result.concat(result_sub);
         
         return result;
