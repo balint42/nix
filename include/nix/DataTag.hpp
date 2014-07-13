@@ -382,6 +382,120 @@ public:
             valid::should(*this, &DataTag::units, valid::notEmpty(), "positions are not set!")
         });
         
+        // since extents & positions DataArray stores a vector of position / extent vectors it has to be 2-dim
+        if(positions()) {
+            if(positions().dataExtent().size() != 2) {
+                result.addError(valid::Message(id(), "dimensionality of positions DataArray must be two!"));
+            }
+        }
+        if(extents()) {
+            if(extents().dataExtent().size() != 2) {
+                result.addError(valid::Message(id(), "dimensionality of extents DataArray must be two!"));
+            }
+        }
+        
+        // check if each unit of tag is convertible to unit of each dim of each referenced DataArray
+        if(!units().empty() && !references().empty()) {
+            auto u = units();           // defined units to loop
+            auto refs = references();   // referenced DataArrays to loop
+            bool mismatch = false;      // loop until true
+            bool warnedSetDim = false;  // warn only once (see loops below)
+            bool warnedNoUnit = false;  // warn only once (see loops below)
+            auto itU = u.begin();       // units iterator
+            auto itRefs = refs.begin(); // references iterator
+            // loop tag units
+            while(!mismatch && (itU != u.end())) {
+                // loop referenced DataArrays
+                while(!mismatch && (itRefs != refs.end())) {
+                    if(((*itRefs).dimensions().size() == u.size()) && (u.size() > 0)) {
+                        auto itDims = (*itRefs).dimensions().begin();
+                        // loop referenced DataArray dims
+                        while(!mismatch && (itDims != (*itRefs).dimensions().end())) {
+                            std::string unit_str = valid::Unit<valid::hasUnit<decltype(*itDims)>::value>().get(*itDims);
+                            // check if dim has unit method at all (is not SetDimension), warn otherwise
+                            if(!warnedSetDim && ((*itDims).dimensionType() == DimensionType::Set)) {
+                                warnedSetDim = true;
+                                result.addWarning(valid::Message(id(), "tag references DataArray (id: " + (*itRefs).id() + ") with dimension (id: " + util::numToStr((*itDims).index()) + ") of type 'SetDimension' which has no units, while tag has defined units!"));
+                            }
+                            else if(!unit_str.empty()) {
+                                warnedNoUnit = true;
+                                result.addWarning(valid::Message(id(), "tag defines units where referenced DataArray (id: " + (*itRefs).id() + ") has none!"));
+                            }
+                            else {
+                                try {
+                                    util::getSIScaling(*itU, unit_str);
+                                }
+                                catch(std::exception e) {
+                                    mismatch = true;
+                                    result.addError(valid::Message(id(), "units of tag are not compatible with units of dimension (id: " + util::numToStr((*itDims).index()) + ") of referenced DataArray (id: " + (*itRefs).id() + ")!"));
+                                }
+                            }
+                            ++itDims;
+                        }
+                        ++itRefs;
+                    }
+                    else {
+                        mismatch = true;
+                        result.addError(valid::Message(id(), "number of units in tag is not equal to number of units in referenced DataArray (id: " + (*itRefs).id() + ")!"));
+                    }
+                }
+                ++itU;
+            }
+        }
+
+        // if tag is referencing any DataArrays check:
+        // rank of positions / extents == rank of all referenced DataArrays AND
+        // number of entries along each dim in positions / extents == number of entries along each dim in all referenced DataArrays
+        // we could use "=="-op of NDSize which does exactly that but then we wouldnt know which check went wrong
+        if(positions() && !references().empty()) {
+            auto refs = references();
+            size_t i;
+            bool mismatch = false;
+            NDSize posExtent = positions().dataExtent();
+            NDSize arrayExtent;
+            auto it = refs.begin();
+            while(!mismatch && (it != refs.end())) {
+                arrayExtent = (*it).dataExtent();
+                if(posExtent.size() != arrayExtent.size()) {
+                    mismatch = true;
+                    result.addError(valid::Message(id(), "positions dimensionality does not match referenced DataArray (id: " + (*it).id() + ") dimensionalities!"));
+                }
+                else {
+                    i = 0;
+                    while(!mismatch && (i < posExtent.size())) {
+                        mismatch = (posExtent[i] != arrayExtent[i]);
+                        result.addError(valid::Message(id(), "number of entries differ in positions and referenced DataArray along dimension " + util::numToStr(i) + "!"));
+                        i++;
+                    }
+                }
+                ++it;
+            }
+        }
+        if(positions() && !references().empty()) {
+            auto refs = references();
+            size_t i;
+            bool mismatch = false;
+            NDSize posExtent = positions().dataExtent();
+            NDSize arrayExtent;
+            auto it = refs.begin();
+            while(!mismatch && (it != refs.end())) {
+                arrayExtent = (*it).dataExtent();
+                if(posExtent.size() != arrayExtent.size()) {
+                    mismatch = true;
+                    result.addError(valid::Message(id(), "positions dimensionality does not match referenced DataArray (id: " + (*it).id() + ") dimensionalities!"));
+                }
+                else {
+                    i = 0;
+                    while(!mismatch && (i < posExtent.size())) {
+                        mismatch = (posExtent[i] != arrayExtent[i]);
+                        result.addError(valid::Message(id(), "number of entries differ in positions and referenced DataArray along dimension " + util::numToStr(i) + "!"));
+                        i++;
+                    }
+                }
+                ++it;
+            }
+        }
+        
         return result.concat(result_base);
     }
 

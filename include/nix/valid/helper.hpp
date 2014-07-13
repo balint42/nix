@@ -40,7 +40,7 @@ namespace valid {
      */
 #ifndef _WIN32
     template <typename T>
-    class hasID
+    class NIXAPI hasID
     {
         typedef char one;
         typedef long two;
@@ -66,16 +66,35 @@ namespace valid {
 #endif
 
     /**
+     * @brief Helper to check classes for an "unit" method via SFINAE
+     * 
+     * Helper class that checks whether a given class or struct has
+     * a method called "unit"
+     * USAGE: hasUnit<TOBJ>::value
+     */
+    template <typename T>
+    class NIXAPI hasUnit
+    {
+        typedef char one;
+        typedef long two;
+
+        template <typename C> static one test( decltype(&C::unit) ) ;
+        template <typename C> static two test(...);
+
+    public:
+        enum { value = sizeof(test<T>(0)) == sizeof(char) };
+    };
+
+    /**
      * @brief Helper calling "id" method in class if and only if it exists (SFINAE)
      * 
      * Helper class with "get" method that will execute a given
      * objects "id" method & return result if "HAS_ID" template param
      * is true and return string "unknown" otherwise.
-     * NOTE: id can be of any type, use "auto" type to store it.
      * USAGE: ID< hasID<TOBJ>::value >().get(obj)
      */
     template <bool HAS_ID>
-    class ID {
+    class NIXAPI ID {
     public:
         template <typename TOBJ>
         auto get(TOBJ parent) -> decltype(parent.id()) {
@@ -83,11 +102,36 @@ namespace valid {
         }
     };
     template <>
-    class ID<false> {
+    class NIXAPI ID<false> {
     public:
         template <typename TOBJ>
         std::string get(TOBJ parent) {
             return std::string("unknown");
+        }
+    };
+
+    /**
+     * @brief Helper calling "unit" method in class if and only if it exists (SFINAE)
+     * 
+     * Helper class with "get" method that will execute a given
+     * objects "unit" method & return result if "HAS_UNIT" template param
+     * is true and return empty string otherwise.
+     * USAGE: ID< hasID<TOBJ>::value >().get(obj)
+     */
+    template <bool HAS_UNIT>
+    class NIXAPI Unit {
+    public:
+        template <typename TOBJ>
+        auto get(TOBJ parent) -> decltype(parent.unit()) {
+            return parent.unit();
+        }
+    };
+    template <>
+    class NIXAPI Unit<false> {
+    public:
+        template <typename TOBJ>
+        std::string get(TOBJ parent) {
+            return std::string();
         }
     };
 
