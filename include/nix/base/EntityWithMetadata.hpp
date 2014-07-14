@@ -101,7 +101,6 @@ public:
     valid::Result validate() {
         valid::Result result_base = NamedEntity<T>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-            valid::should(*this, &EntityWithMetadata::metadata, valid::notFalse(), "no metadata set!")
         });
         
         return result.concat(result_base);

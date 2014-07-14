@@ -114,8 +114,7 @@ public:
         valid::Result result_base = Entity<T>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
             valid::must(*this, &NamedEntity::name, valid::notEmpty(), "no name set!"),
-            valid::must(*this, &NamedEntity::type, valid::notEmpty(), "no type set!"),
-            valid::should(*this, &NamedEntity::definition, valid::notFalse(), "no definition set!")
+            valid::must(*this, &NamedEntity::type, valid::notEmpty(), "no type set!")
         });
         
         return result.concat(result_base);
