@@ -202,12 +202,12 @@ namespace valid {
     };
 
     /**
-     * @brief Check if given class represents a valid unit string
+     * @brief Check if given class represents valid SI unit string(s)
      * 
-     * One Check struct that checks whether the given string represents
-     * a valid atomic SI or compound SI unit.
+     * One Check struct that checks whether the given string(s) represent(s)
+     * a valid atomic or compound SI unit.
      * Parameter can be of type boost optional (containing nothing or 
-     * string) or of type string.
+     * string) or of type string or a vector of strings.
      */
     struct isValidUnit {
         template<typename T>
@@ -217,15 +217,26 @@ namespace valid {
         bool operator()(const std::string &u) const {
             return (util::isSIUnit(u) || util::isCompoundSIUnit(u));
         }
+        bool operator()(const std::vector<std::string> &u) const {
+            bool isValid = true;
+            
+            auto itU = u.begin();
+            while(isValid && itU != u.end()) {
+                isValid = util::isSIUnit(*itU) || util::isCompoundSIUnit(*itU);
+                ++itU;
+            }
+            
+            return isValid;
+        }
     };
 
     /**
-     * @brief Check if given class represents a valid atomic SI unit string
+     * @brief Check if given class represents valid atomic SI unit string(s)
      * 
-     * One Check struct that checks whether the given string represents
+     * One Check struct that checks whether the given string(s) represent(s)
      * a valid atomic SI unit.
      * Parameter can be of type boost optional (containing nothing or 
-     * string) or of type string.
+     * string) or of type string or a vector of strings.
      */
     struct isAtomicUnit {
         template<typename T>
@@ -235,15 +246,26 @@ namespace valid {
         bool operator()(const std::string &u) const {
             return util::isSIUnit(u);
         }
+        bool operator()(const std::vector<std::string> &u) const {
+            bool isValid = true;
+            
+            auto itU = u.begin();
+            while(isValid && itU != u.end()) {
+                isValid = util::isSIUnit(*itU);
+                ++itU;
+            }
+            
+            return isValid;
+        }
     };
 
     /**
-     * @brief Check if given class represents a valid compound SI unit string
+     * @brief Check if given class represents valid compound SI unit string(s)
      * 
-     * One Check struct that checks whether the given string represents
+     * One Check struct that checks whether the given string(s) represent(s)
      * a valid compound SI unit.
      * Parameter can be of type boost optional (containing nothing or 
-     * string) or of type string.
+     * string) or of type string or a vector of strings.
      */
     struct isCompoundUnit {
         template<typename T>
@@ -252,6 +274,17 @@ namespace valid {
         }
         bool operator()(const std::string &u) const {
             return util::isCompoundSIUnit(u);
+        }
+        bool operator()(const std::vector<std::string> &u) const {
+            bool isValid = true;
+            
+            auto itU = u.begin();
+            while(isValid && itU != u.end()) {
+                isValid = util::isCompoundSIUnit(*itU);
+                ++itU;
+            }
+            
+            return isValid;
         }
     };
 
