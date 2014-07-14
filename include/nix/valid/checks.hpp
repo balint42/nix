@@ -9,8 +9,13 @@
 #ifndef NIX_CHECKS_H
 #define NIX_CHECKS_H
 
+#include <boost/optional.hpp>
+#include <nix/util/util.hpp>
+#include <nix/valid/helper.hpp>
+
 namespace nix {
 namespace valid {
+    
 
     /**
      * @brief Check if later given not greater than initally defined value.
@@ -193,6 +198,91 @@ namespace valid {
         template<typename T>
         bool operator()(const T &val) const {
             return val.empty();
+        }
+    };
+
+    /**
+     * @brief Check if given class represents a valid unit string
+     * 
+     * One Check struct that checks whether the given string represents
+     * a valid atomic SI or compound SI unit.
+     * Parameter can be of type boost optional (containing nothing or 
+     * string) or of type string.
+     */
+    struct isValidUnit {
+        template<typename T>
+        bool operator()(const boost::optional<T> &u) const {
+            return u ? (util::isSIUnit(*u) || util::isCompoundSIUnit(*u)) : false;
+        }
+        bool operator()(const std::string &u) const {
+            return (util::isSIUnit(u) || util::isCompoundSIUnit(u));
+        }
+    };
+
+    /**
+     * @brief Check if given class represents a valid atomic SI unit string
+     * 
+     * One Check struct that checks whether the given string represents
+     * a valid atomic SI unit.
+     * Parameter can be of type boost optional (containing nothing or 
+     * string) or of type string.
+     */
+    struct isAtomicUnit {
+        template<typename T>
+        bool operator()(const boost::optional<T> &u) const {
+            return u ? util::isSIUnit(*u) : false;
+        }
+        bool operator()(const std::string &u) const {
+            return util::isSIUnit(u);
+        }
+    };
+
+    /**
+     * @brief Check if given class represents a valid compound SI unit string
+     * 
+     * One Check struct that checks whether the given string represents
+     * a valid compound SI unit.
+     * Parameter can be of type boost optional (containing nothing or 
+     * string) or of type string.
+     */
+    struct isCompoundUnit {
+        template<typename T>
+        bool operator()(const boost::optional<T> &u) const {
+            return u ? util::isCompoundSIUnit(*u) : false;
+        }
+        bool operator()(const std::string &u) const {
+            return util::isCompoundSIUnit(u);
+        }
+    };
+
+    /**
+     * @brief Check if given value can be regarded as being set
+     * 
+     * One Check struct that checks whether the given value can be
+     * considered set, by applying {@link notFalse} and {@link notEmpty}
+     * checks. Value thus is set if: STL cotnainer not empty,
+     * bool is true, boost optional is set, number is not 0.
+     * Parameter can be of above types or even boost none_t.
+     */
+    struct isSet {
+        template<typename T>
+        bool operator()(const T &val) const {
+            typedef typename std::conditional<hasEmpty<T>::value, notEmpty, notFalse>::type subCheck;
+            return subCheck(val);
+        }
+    };
+
+    /**
+     * @brief Check if given container is sorted using std::is_sorted
+     * 
+     * One Check struct that checks whether the given container is sorted
+     * according to std::is_sorted. Thus supports types that are 
+     * supported by std::is_sorted.
+     */
+    struct isSorted {
+        template<typename T>
+        bool operator()(const T &container) const {
+            return std::is_sorted(container.begin(), container.end());
         }
     };
 
