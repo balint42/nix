@@ -380,7 +380,7 @@ public:
             valid::could(*this, &DataTag::positions, valid::notFalse(), {
                 valid::must(*this, &DataTag::positions, valid::dimEquals(2), "dimensionality of positions DataArray must be two!") }),
             valid::could(*this, &DataTag::extents, valid::notFalse(), {
-                valid::must(*this, &DataTag::extents, valid::dimEquals(2), "dimensionality of positions DataArray must be two!") }),
+                valid::must(*this, &DataTag::extents, valid::dimEquals(2), "dimensionality of positions DataArray must be two!") })
         });
         
         // check if each unit of tag is convertible to unit of each dim of each referenced DataArray

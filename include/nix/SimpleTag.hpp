@@ -367,11 +367,7 @@ public:
     valid::Result validate() {
         valid::Result result_base = base::EntityWithSources<base::ISimpleTag>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-            valid::should(*this, &SimpleTag::extent, valid::notEmpty(), "extent is not set!"),
-            valid::should(*this, &SimpleTag::position, valid::notEmpty(), "position is not set!"),
-            valid::should(*this, &SimpleTag::units, valid::notEmpty(), "units are not set!"),
-            valid::must(*this, &SimpleTag::referenceCount, valid::isGreater(0), "references are not set!"),            
-            valid::should(*this, &SimpleTag::featureCount, valid::isGreater(0), "features are not set!")
+            valid::must(*this, &SimpleTag::referenceCount, valid::isGreater(0), "references are not set!")
         });
         
         return result.concat(result_base);
