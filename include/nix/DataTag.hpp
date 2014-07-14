@@ -375,24 +375,13 @@ public:
     valid::Result validate() {
         valid::Result result_base = base::EntityWithSources<base::IDataTag>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-            valid::should(*this, &DataTag::extents, valid::notFalse(), "extents are not set!"),
-            valid::should(*this, &DataTag::featureCount, valid::isGreater(0), "features are not set!"),
-            valid::should(*this, &DataTag::referenceCount, valid::isGreater(0), "references are not set!"),
             valid::must(*this, &DataTag::positions, valid::notFalse(), "positions are not set!"),
-            valid::should(*this, &DataTag::units, valid::notEmpty(), "positions are not set!")
+            // since extents & positions DataArray stores a vector of position / extent vectors it has to be 2-dim
+            valid::could(*this, &DataTag::positions, valid::notFalse(), {
+                valid::must(*this, &DataTag::positions, valid::dimEquals(2), "dimensionality of positions DataArray must be two!") }),
+            valid::could(*this, &DataTag::extents, valid::notFalse(), {
+                valid::must(*this, &DataTag::extents, valid::dimEquals(2), "dimensionality of positions DataArray must be two!") }),
         });
-        
-        // since extents & positions DataArray stores a vector of position / extent vectors it has to be 2-dim
-        if(positions()) {
-            if(positions().dataExtent().size() != 2) {
-                result.addError(valid::Message(id(), "dimensionality of positions DataArray must be two!"));
-            }
-        }
-        if(extents()) {
-            if(extents().dataExtent().size() != 2) {
-                result.addError(valid::Message(id(), "dimensionality of extents DataArray must be two!"));
-            }
-        }
         
         // check if each unit of tag is convertible to unit of each dim of each referenced DataArray
         if(!units().empty() && !references().empty()) {
@@ -471,24 +460,24 @@ public:
                 ++it;
             }
         }
-        if(positions() && !references().empty()) {
+        if(extents() && !references().empty()) {
             auto refs = references();
             size_t i;
             bool mismatch = false;
-            NDSize posExtent = positions().dataExtent();
+            NDSize extExtent = extents().dataExtent();
             NDSize arrayExtent;
             auto it = refs.begin();
             while(!mismatch && (it != refs.end())) {
                 arrayExtent = (*it).dataExtent();
-                if(posExtent.size() != arrayExtent.size()) {
+                if(extExtent.size() != arrayExtent.size()) {
                     mismatch = true;
-                    result.addError(valid::Message(id(), "positions dimensionality does not match referenced DataArray (id: " + (*it).id() + ") dimensionalities!"));
+                    result.addError(valid::Message(id(), "extents dimensionality does not match referenced DataArray (id: " + (*it).id() + ") dimensionalities!"));
                 }
                 else {
                     i = 0;
-                    while(!mismatch && (i < posExtent.size())) {
-                        mismatch = (posExtent[i] != arrayExtent[i]);
-                        result.addError(valid::Message(id(), "number of entries differ in positions and referenced DataArray along dimension " + util::numToStr(i) + "!"));
+                    while(!mismatch && (i < extExtent.size())) {
+                        mismatch = (extExtent[i] != arrayExtent[i]);
+                        result.addError(valid::Message(id(), "number of entries differ in extents and referenced DataArray along dimension " + util::numToStr(i) + "!"));
                         i++;
                     }
                 }

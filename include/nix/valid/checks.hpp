@@ -286,6 +286,25 @@ namespace valid {
         }
     };
 
+    /**
+     * @brief Check if given DataArray has given dimensionality
+     * 
+     * One Check struct that checks whether the given DataArray entity
+     * has a dimensionality of the given uint value by getting its' 
+     * NDSize class via the "dataExtent" method and checking its' size
+     * via "size" the method.
+     */
+    struct dimEquals {
+        const size_t value;
+        
+        dimEquals(size_t value) : value(value) {}
+        
+        template<typename T>
+        bool operator()(const T &array) const {
+            return (array.dataExtent().size() == value);
+        }
+    };
+
 } // namespace valid
 } // namespace nix
 
