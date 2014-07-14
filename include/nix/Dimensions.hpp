@@ -303,23 +303,15 @@ public:
     //------------------------------------------------------
     
     valid::Result validate() {
-        valid::Result result_sub = valid::Result();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
             valid::must(*this, &SampledDimension::index, valid::notSmaller(1), "index is not set to valid value (size_t > 0)!"),
             valid::must(*this, &SampledDimension::samplingInterval, valid::isGreater(0), "samplingInterval is not set to valid value (> 0)!"),
-            valid::must(*this, &SampledDimension::dimensionType, valid::isEqual<DimensionType>(DimensionType::Sample), "dimension type is not correct!")
+            valid::must(*this, &SampledDimension::dimensionType, valid::isEqual<DimensionType>(DimensionType::Sample), "dimension type is not correct!"),
+            valid::could(*this, &SampledDimension::offset, valid::notFalse(), {
+                valid::should(*this, &SampledDimension::unit, valid::isAtomicUnit(), "offset is set, but no valid unit set!") }),
+            valid::could(*this, &SampledDimension::unit, valid::notFalse(), {
+                valid::must(*this, &SampledDimension::unit, valid::isAtomicUnit(), "Unit is set but not an atomic SI. Note: So far composite units are not supported!") })
         });
-        
-        if(unit()) {
-            if(!util::isSIUnit(*unit())) {
-                result_sub.concat(valid::validate(std::initializer_list<valid::condition> {
-                    valid::should(*this, &SampledDimension::offset, valid::isFalse(), "offset is set, but no valid unit set!")
-                }));
-                result_sub.addError(valid::Message(util::numToStr(index()), "Unit is not an atomic SI. Note: So far composite units are not supported!"));
-            }
-        }
-        
-        result.concat(result_sub);
         
         return result;
     }
@@ -555,23 +547,14 @@ public:
     //------------------------------------------------------
     
     valid::Result validate() {
-        valid::Result result_sub = valid::Result();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
             valid::must(*this, &RangeDimension::index, valid::notSmaller(1), "index is not set to valid value (size_t > 0)!"),
             valid::must(*this, &RangeDimension::ticks, valid::notEmpty(), "ticks are not set!"),
-            valid::must(*this, &RangeDimension::dimensionType, valid::isEqual<DimensionType>(DimensionType::Range), "dimension type is not correct!")
+            valid::must(*this, &RangeDimension::dimensionType, valid::isEqual<DimensionType>(DimensionType::Range), "dimension type is not correct!"),
+            valid::could(*this, &RangeDimension::unit, valid::notFalse(), {
+                valid::must(*this, &RangeDimension::unit, valid::isAtomicUnit(), "Unit is set but not an atomic SI. Note: So far composite units are not supported!") }),
+            valid::must(*this, &RangeDimension::ticks, valid::isSorted(), "Ticks are not sorted!")
         });
-        
-        if(unit()) {
-            if(!util::isSIUnit(*unit())) {
-                result_sub.addError(valid::Message(util::numToStr(index()), "Unit is not an atomic SI. Note: So far composite units are not supported!"));
-            }
-        }
-        if(!std::is_sorted(ticks().begin(), ticks().end())) {
-            result_sub.addError(valid::Message(util::numToStr(index()), "Ticks are not sorted!"));
-        }
-        
-        result.concat(result_sub);
         
         return result;
     }
