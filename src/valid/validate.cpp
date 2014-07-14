@@ -14,7 +14,7 @@
 namespace nix {
 namespace valid {
 
-Result validate(std::initializer_list<condition> li) {
+Result validate(std::vector<condition> li) {
     Result result = Result();
 
     for (auto it = li.begin(); it != li.end(); ++it) {
