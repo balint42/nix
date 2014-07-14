@@ -86,6 +86,26 @@ namespace valid {
     };
 
     /**
+     * @brief Helper to check classes for an "empty" method via SFINAE
+     * 
+     * Helper class that checks whether a given class or struct has
+     * a method called "empty"
+     * USAGE: hasEmpty<TOBJ>::value
+     */
+    template <typename T>
+    class NIXAPI hasEmpty
+    {
+        typedef char one;
+        typedef long two;
+
+        template <typename C> static one test( decltype(&C::empty) ) ;
+        template <typename C> static two test(...);
+
+    public:
+        enum { value = sizeof(test<T>(0)) == sizeof(char) };
+    };
+
+    /**
      * @brief Helper calling "id" method in class if and only if it exists (SFINAE)
      * 
      * Helper class with "get" method that will execute a given
