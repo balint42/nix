@@ -211,18 +211,18 @@ namespace valid {
      */
     struct isValidUnit {
         template<typename T>
-        bool operator()(const boost::optional<T> &u) const {
-            return u ? (util::isSIUnit(*u) || util::isCompoundSIUnit(*u)) : false;
-        }
         bool operator()(const std::string &u) const {
             return (util::isSIUnit(u) || util::isCompoundSIUnit(u));
+        }
+        bool operator()(const boost::optional<T> &u) const {
+            return u ? (*this)(*u) : false;
         }
         bool operator()(const std::vector<std::string> &u) const {
             bool isValid = true;
             
             auto itU = u.begin();
             while(isValid && itU != u.end()) {
-                isValid = util::isSIUnit(*itU) || util::isCompoundSIUnit(*itU);
+                isValid = (*this)(*itU);
                 ++itU;
             }
             
@@ -240,18 +240,18 @@ namespace valid {
      */
     struct isAtomicUnit {
         template<typename T>
-        bool operator()(const boost::optional<T> &u) const {
-            return u ? util::isSIUnit(*u) : false;
-        }
         bool operator()(const std::string &u) const {
             return util::isSIUnit(u);
+        }
+        bool operator()(const boost::optional<T> &u) const {
+            return u ? (*this)(*u) : false;
         }
         bool operator()(const std::vector<std::string> &u) const {
             bool isValid = true;
             
             auto itU = u.begin();
             while(isValid && itU != u.end()) {
-                isValid = util::isSIUnit(*itU);
+                isValid = (*this)(*itU);
                 ++itU;
             }
             
@@ -268,19 +268,19 @@ namespace valid {
      * string) or of type string or a vector of strings.
      */
     struct isCompoundUnit {
-        template<typename T>
-        bool operator()(const boost::optional<T> &u) const {
-            return u ? util::isCompoundSIUnit(*u) : false;
-        }
         bool operator()(const std::string &u) const {
             return util::isCompoundSIUnit(u);
+        }
+        template<typename T>
+        bool operator()(const boost::optional<T> &u) const {
+            return u ? (*this)(*u) : false;
         }
         bool operator()(const std::vector<std::string> &u) const {
             bool isValid = true;
             
             auto itU = u.begin();
             while(isValid && itU != u.end()) {
-                isValid = util::isCompoundSIUnit(*itU);
+                isValid = (*this)(*itU);
                 ++itU;
             }
             
