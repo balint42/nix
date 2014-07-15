@@ -367,7 +367,10 @@ public:
     valid::Result validate() {
         valid::Result result_base = base::EntityWithSources<base::ISimpleTag>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-            valid::must(*this, &SimpleTag::referenceCount, valid::isGreater(0), "references are not set!")
+            valid::must(*this, &SimpleTag::referenceCount, valid::isGreater(0), "references are not set!"),
+            // check units for validity
+            valid::could(*this, &SimpleTag::units, valid::notEmpty(), {
+                valid::must(*this, &SimpleTag::units, valid::isValidUnit(), "Unit is invalid: not an atomic SI. Note: So far composite units are not supported!") })
         });
         
         return result.concat(result_base);

@@ -248,8 +248,16 @@ public:
      *
      * @return A vector containing all filtered DataArray entities.
      */
-    std::vector<DataArray> references(util::Filter<DataArray>::type filter = util::AcceptAll<DataArray>()) const
+    std::vector<DataArray> references(util::Filter<DataArray>::type filter) const
     {
+        auto f = [this] (size_t i) { return getReference(i); };
+        return getEntities<DataArray>(f,
+                                      referenceCount(),
+                                      filter);
+    }
+    std::vector<DataArray> references() const
+    {
+        util::Filter<DataArray>::type filter = util::AcceptAll<DataArray>();
         auto f = [this] (size_t i) { return getReference(i); };
         return getEntities<DataArray>(f,
                                       referenceCount(),
@@ -378,63 +386,19 @@ public:
             valid::must(*this, &DataTag::positions, valid::notFalse(), "positions are not set!"),
             // since extents & positions DataArray stores a vector of position / extent vectors it has to be 2-dim
             valid::could(*this, &DataTag::positions, valid::notFalse(), {
-                valid::must(*this, &DataTag::positions, valid::dimEquals(2), "dimensionality of positions DataArray must be two!") }),
+                valid::must(*this, 
+                &DataTag::positions, 
+                valid::dimEquals(2), 
+                "dimensionality of positions DataArray must be two!") }),
             valid::could(*this, &DataTag::extents, valid::notFalse(), {
                 valid::must(*this, &DataTag::extents, valid::dimEquals(2), "dimensionality of positions DataArray must be two!") }),
             // check units for validity
-            valid::could(*this, &DataTag::units, valid::notFalse(), {
-                valid::must(*this, &DataTag::units, valid::isValidUnit(), "Unit is invalid: not an atomic SI. Note: So far composite units are not supported!") })
+            valid::could(*this, &DataTag::units, valid::notEmpty(), {
+                valid::must(*this, &DataTag::units, valid::isValidUnit(), "Some of the units in tag are invalid: not an atomic SI. Note: So far composite SI units are not supported!") }),
+            valid::must(*this, &DataTag::references, valid::tagRefsHaveUnits(units()), "Some of the referenced DataArrays' dimensions don't have units where the tag has. Make sure that all references have the same number of dimensions as the tag has units and that each dimension has a unit set."),
+            valid::must(*this, &DataTag::references, valid::tagUnitsMatchRefsUnits(units()), "Some of the referenced DataArrays' dimensions have units that are not convertible to the units set in tag. Note: So far composite SI units are not supported!")
         });
         
-        // check if each unit of tag is convertible to unit of each dim of each referenced DataArray
-        if(!units().empty() && !references().empty()) {
-            auto u = units();           // defined units to loop
-            auto refs = references();   // referenced DataArrays to loop
-            bool mismatch = false;      // loop until true
-            bool warnedSetDim = false;  // warn only once (see loops below)
-            bool warnedNoUnit = false;  // warn only once (see loops below)
-            auto itU = u.begin();       // units iterator
-            auto itRefs = refs.begin(); // references iterator
-            // loop tag units
-            while(!mismatch && (itU != u.end())) {
-                // loop referenced DataArrays
-                while(!mismatch && (itRefs != refs.end())) {
-                    if(((*itRefs).dimensions().size() == u.size()) && (u.size() > 0)) {
-                        auto itDims = (*itRefs).dimensions().begin();
-                        // loop referenced DataArray dims
-                        while(!mismatch && (itDims != (*itRefs).dimensions().end())) {
-                            std::string unit_str = valid::Unit<valid::hasUnit<decltype(*itDims)>::value>().get(*itDims);
-                            // check if dim has unit method at all (is not SetDimension), warn otherwise
-                            if(!warnedSetDim && ((*itDims).dimensionType() == DimensionType::Set)) {
-                                warnedSetDim = true;
-                                result.addWarning(valid::Message(id(), "tag references DataArray (id: " + (*itRefs).id() + ") with dimension (id: " + util::numToStr((*itDims).index()) + ") of type 'SetDimension' which has no units, while tag has defined units!"));
-                            }
-                            else if(!unit_str.empty()) {
-                                warnedNoUnit = true;
-                                result.addWarning(valid::Message(id(), "tag defines units where referenced DataArray (id: " + (*itRefs).id() + ") has none!"));
-                            }
-                            else {
-                                try {
-                                    util::getSIScaling(*itU, unit_str);
-                                }
-                                catch(std::exception e) {
-                                    mismatch = true;
-                                    result.addError(valid::Message(id(), "units of tag are not compatible with units of dimension (id: " + util::numToStr((*itDims).index()) + ") of referenced DataArray (id: " + (*itRefs).id() + ")!"));
-                                }
-                            }
-                            ++itDims;
-                        }
-                        ++itRefs;
-                    }
-                    else {
-                        mismatch = true;
-                        result.addError(valid::Message(id(), "number of units in tag is not equal to number of units in referenced DataArray (id: " + (*itRefs).id() + ")!"));
-                    }
-                }
-                ++itU;
-            }
-        }
-
         // if tag is referencing any DataArrays check:
         // rank of positions / extents == rank of all referenced DataArrays AND
         // number of entries along each dim in positions / extents == number of entries along each dim in all referenced DataArrays

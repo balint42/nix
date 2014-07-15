@@ -13,6 +13,8 @@
 #include <nix/util/util.hpp>
 #include <nix/valid/helper.hpp>
 
+#include <nix/base/IDimensions.hpp>
+
 namespace nix {
 namespace valid {
     
@@ -210,10 +212,10 @@ namespace valid {
      * string) or of type string or a vector of strings.
      */
     struct isValidUnit {
-        template<typename T>
         bool operator()(const std::string &u) const {
             return (util::isSIUnit(u) || util::isCompoundSIUnit(u));
         }
+        template<typename T>
         bool operator()(const boost::optional<T> &u) const {
             return u ? (*this)(*u) : false;
         }
@@ -239,10 +241,10 @@ namespace valid {
      * string) or of type string or a vector of strings.
      */
     struct isAtomicUnit {
-        template<typename T>
         bool operator()(const std::string &u) const {
             return util::isSIUnit(u);
         }
+        template<typename T>
         bool operator()(const boost::optional<T> &u) const {
             return u ? (*this)(*u) : false;
         }
@@ -330,13 +332,137 @@ namespace valid {
     struct dimEquals {
         const size_t value;
         
-        dimEquals(size_t value) : value(value) {}
+        dimEquals(const size_t &value) : value(value) {}
         
         template<typename T>
         bool operator()(const T &array) const {
             return (array.dataExtent().size() == value);
         }
     };
+
+    /**
+     * @brief Check if given referenced DataArrays' dimensions all have units
+     * 
+     * One Check struct that checks whether the given referenced
+     * DataArrays' dimensions all have units defined where the tag has.
+     * (where the tag has means at the same index in the tag's units
+     * vector as the dimension index in the referenced DataArray)
+     * Therefore it loops through all dimensions of all given references 
+     * and checks whether the dimension has a unit set if the tag has. 
+     * The test counts as passed if all dimensions have units set (where
+     * the tag has). The test fails if the dimension has no unit set
+     * (though the tag has) or if it is a dimension type without unit at
+     * all (and the tag has a unit set) {@link SetDimension}.
+     * This is an extension of {@link tagUnitsMatchRefsUnits}, thus 
+     * checks things {@link tagUnitsMatchRefsUnits} does not.
+     */
+    struct tagRefsHaveUnits {
+        const std::vector<std::string> units;
+        
+        tagRefsHaveUnits(const std::vector<std::string> &units) : units(units) {}
+        
+        template<typename T>
+        bool operator()(const std::vector<T> &references) const {
+            bool mismatch = false; // loop until true
+
+            // check if each unit of tag is convertible to unit of each dim of each referenced DataArray
+            if(!units.empty() && !references.empty()) {
+                auto u = units;             // defined units to loop
+                auto refs = references;     // referenced DataArrays to loop
+                auto itU = u.begin();       // units iterator
+                auto itRefs = refs.begin(); // references iterator
+                // loop referenced DataArrays
+                while(!mismatch && (itRefs != refs.end())) {
+                    if(((*itRefs).dimensions().size() == u.size()) && (u.size() > 0)) {
+                        auto itDims = (*itRefs).dimensions().begin();
+                        // loop referenced DataArray dims
+                        while(!mismatch && (itDims != (*itRefs).dimensions().end()) && (itU != u.end())) {
+                            std::string dimUnit = valid::Unit<valid::hasUnit<decltype(*itDims)>::value>().get(*itDims);
+                            // check if dim has unit method at all (is not SetDimension)
+                            if(!(*itU).empty() && ((*itDims).dimensionType() == DimensionType::Set)) {
+                                mismatch = true;
+                            }
+                            else if((dimUnit.empty() && !(*itU).empty()) || (!dimUnit.empty() && (*itU).empty())) {
+                                mismatch = true;
+                            }
+                            ++itDims;
+                            ++itU;
+                        }
+                        ++itRefs;
+                    }
+                    else {
+                        mismatch = true;
+                    }
+                }
+                ++itU;
+            } // if vectors not empty
+            
+            return !mismatch;
+        } // bool operator()
+    }; // struct
+
+    /**
+     * @brief Check if given units match given referenced DataArrays' units
+     * 
+     * One Check struct that checks whether the given units (vector of
+     * strings) match the given referenced DataArrays' (vector of
+     * DataArray references) units. Therefore it loops through all
+     * dimensions of all given references and checks whether the
+     * dimension has a unit set and if so whether it is convertible to
+     * the unit with the same index in the given units vector.
+     * The test counts as passed if all dimensions that have units set,
+     * have units that are convertible. Thus this test does _not_ fail
+     * just because a dimension has no unit (by type or because not 
+     * set). It _does_ fail if the number of dimensions in a referenced
+     * DataArray differs the number of given units.
+     * This is an extension of {@link tagRefsHaveUnits}, thus checks
+     * things that {@link tagRefsHaveUnits} does not.
+     */
+    struct tagUnitsMatchRefsUnits {
+        const std::vector<std::string> units;
+        
+        tagUnitsMatchRefsUnits(const std::vector<std::string> &units) : units(units) {}
+        
+        template<typename T>
+        bool operator()(const std::vector<T> &references) const {
+            bool mismatch = false; // loop until true
+
+            // check if each unit of tag is convertible to unit of each dim of each referenced DataArray
+            if(!units.empty() && !references.empty()) {
+                auto u = units;             // defined units to loop
+                auto refs = references;     // referenced DataArrays to loop
+                auto itU = u.begin();       // units iterator
+                auto itRefs = refs.begin(); // references iterator
+                // loop referenced DataArrays
+                while(!mismatch && (itRefs != refs.end())) {
+                    if(((*itRefs).dimensions().size() == u.size()) && (u.size() > 0)) {
+                        auto itDims = (*itRefs).dimensions().begin();
+                        // loop referenced DataArray dims
+                        while(!mismatch && (itDims != (*itRefs).dimensions().end()) && (itU != u.end())) {
+                            std::string dimUnit = valid::Unit<valid::hasUnit<decltype(*itDims)>::value>().get(*itDims);
+                            if(!dimUnit.empty()) {
+                                try {
+                                    util::getSIScaling(*itU, dimUnit);
+                                }
+                                catch(std::exception e) {
+                                    mismatch = true;
+                                }
+                            }
+                            ++itDims;
+                            ++itU;
+                        }
+                        ++itRefs;
+                    }
+                    else {
+                        mismatch = true;
+                    }
+                }
+                ++itU;
+            } // if vectors not empty
+            
+            return !mismatch;
+        } // bool operator()
+    }; // struct
 
 } // namespace valid
 } // namespace nix
