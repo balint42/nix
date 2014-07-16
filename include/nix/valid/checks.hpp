@@ -441,10 +441,7 @@ namespace valid {
                         while(!mismatch && (itDims != (*itRefs).dimensions().end()) && (itU != u.end())) {
                             std::string dimUnit = valid::Unit<valid::hasUnit<decltype(*itDims)>::value>().get(*itDims);
                             if(!dimUnit.empty()) {
-                                try {
-                                    util::getSIScaling(*itU, dimUnit);
-                                }
-                                catch(std::exception e) {
+                                if(!util::isScalable(*itU, dimUnit)) {
                                     mismatch = true;
                                 }
                             }
