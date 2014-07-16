@@ -158,7 +158,6 @@ namespace valid {
      * @returns The created, callable condition of type condition
      */
     template<typename TOBJ, typename TBASEOBJ, typename TRET, typename TCHECK>
-	NIXAPI
     condition
     could(const TOBJ &parent, TRET(TBASEOBJ::*get)(void)const, const TCHECK &check,
           const std::initializer_list<condition> &subs = {}) {
