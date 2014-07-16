@@ -72,6 +72,7 @@ namespace valid {
      * a method called "unit"
      * USAGE: hasUnit<TOBJ>::value
      */
+#ifndef _WIN32
     template <typename T>
     class NIXAPI hasUnit
     {
@@ -84,6 +85,19 @@ namespace valid {
     public:
         enum { value = sizeof(test<T>(0)) == sizeof(char) };
     };
+#else
+	template <typename T>
+	class hasUnit
+	{
+	public:
+		__if_exists(T::unit) {
+			static const bool value = true;
+		}
+		__if_not_exists(T::unit) {
+			static const bool value = false;
+		}
+	};
+#endif
 
     /**
      * @brief Helper to check classes for an "empty" method via SFINAE
@@ -92,6 +106,7 @@ namespace valid {
      * a method called "empty"
      * USAGE: hasEmpty<TOBJ>::value
      */
+#ifndef _WIN32
     template <typename T>
     class NIXAPI hasEmpty
     {
@@ -104,6 +119,19 @@ namespace valid {
     public:
         enum { value = sizeof(test<T>(0)) == sizeof(char) };
     };
+#else
+	template <typename T>
+	class hasEmpty
+	{
+	public:
+		__if_exists(T::empty) {
+			static const bool value = true;
+		}
+		__if_not_exists(T::empty) {
+			static const bool value = false;
+		}
+	};
+#endif
 
     /**
      * @brief Helper calling "id" method in class if and only if it exists (SFINAE)
