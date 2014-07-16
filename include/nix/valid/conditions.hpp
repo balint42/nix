@@ -51,7 +51,7 @@ namespace valid {
      */
     template<typename TOBJ, typename TBASEOBJ, typename TRET, typename TCHECK>
     condition
-    must(const TOBJ &parent, TRET(TBASEOBJ::*get)(void)const, const TCHECK &check, 
+    must(const TOBJ &parent, TRET(TBASEOBJ::*get)(void)const, const TCHECK &check,
          const std::string &msg, const std::initializer_list<condition> &subs = {}) {
         return [parent, get, check, msg, subs] () -> Result {
             bool errOccured = false;
@@ -105,7 +105,7 @@ namespace valid {
      */
     template<typename TOBJ, typename TBASEOBJ, typename TRET, typename TCHECK>
     condition
-    should(const TOBJ &parent, TRET(TBASEOBJ::*get)(void)const, const TCHECK &check, 
+    should(const TOBJ &parent, TRET(TBASEOBJ::*get)(void)const, const TCHECK &check,
            const std::string &msg, const std::initializer_list<condition> &subs = {}) {
         return [parent, get, check, msg, subs] () -> Result {
             bool errOccured = false;
@@ -160,7 +160,7 @@ namespace valid {
     template<typename TOBJ, typename TBASEOBJ, typename TRET, typename TCHECK>
 	NIXAPI
     condition
-    could(const TOBJ &parent, TRET(TBASEOBJ::*get)(void)const, const TCHECK &check, 
+    could(const TOBJ &parent, TRET(TBASEOBJ::*get)(void)const, const TCHECK &check,
           const std::initializer_list<condition> &subs = {}) {
         return [parent, get, check, subs] () -> Result {
             bool errOccured = false;
