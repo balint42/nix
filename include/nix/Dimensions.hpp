@@ -21,136 +21,7 @@ namespace nix {
 class SampledDimension;
 class RangeDimension;
 class SetDimension;
-
-/**
- * @brief Instances of the Dimension subclasses are used to define the different dimensions of data in a DataArray.
- *
- * The real dimension descriptor are defined in three subclasses: RangeDimension, SampledDimension and  SetDimension
- */
-class NIXAPI Dimension : public virtual base::IDimension, public base::ImplContainer<base::IDimension> {
-
-public:
-
-    /**
-     * @brief Constructor that creates an uninitialized Dimension.
-     *
-     * Calling any method on an uninitialized dimension will throw a {@link nix::UninitializedEntity}
-     * exception. The following code illustrates how to check if a dimension is initialized:
-     *
-     * ~~~
-     * Dimension e = ...;
-     * if (e) {
-     *     // e is initialised
-     * } else {
-     *     // e is uninitialized
-     * }
-     * ~~~
-     */
-    Dimension();
-
-    /**
-     * @brief Constructor that creates a new dimension from a shared pointer to
-     * an implementation instance.
-     *
-     * This constructor should only be used in the back-end.
-     */
-    Dimension(const std::shared_ptr<base::IDimension> &p_impl);
-
-    /**
-     * @brief Constructor with move semantics that creates a new dimension from a shared pointer to
-     * an implementation instance.
-     *
-     * This constructor should only be used in the back-end.
-     */
-    Dimension(std::shared_ptr<base::IDimension> &&ptr);
-
-
-    /**
-     * @brief Copy constructor
-     *
-     * Copying of all NIX front facing objects like Dimension is a rather cheap operation.
-     * Semantically this is equivalent to the creation of another reference to the original
-     * object.
-     *
-     * @param other     The dimension to copy.
-     */
-    Dimension(const Dimension &other);
-
-    /**
-     * @brief Copy constructor that converts a SampledDimension to Dimension.
-     *
-     * Copying of all NIX front facing objects like Dimension is a rather cheap operation.
-     * Semantically this is equivalent to the creation of another reference to the original
-     * object.
-     *
-     * @param other     The dimension to copy.
-     */
-    Dimension(const SampledDimension &other);
-
-    /**
-     * @brief Copy constructor that converts a RangeDimension to Dimension.
-     *
-     * Copying of all NIX front facing objects like Dimension is a rather cheap operation.
-     * Semantically this is equivalent to the creation of another reference to the original
-     * object.
-     *
-     * @param other     The dimension to copy.
-     */
-    Dimension(const RangeDimension &other);
-
-    /**
-     * @brief Copy constructor that converts a SetDimension to Dimension.
-     *
-     * Copying of all NIX front facing objects like Dimension is a rather cheap operation.
-     * Semantically this is equivalent to the creation of another reference to the original
-     * object.
-     *
-     * @param other     The dimension to copy.
-     */
-    Dimension(const SetDimension &other);
-
-
-    size_t index() const {
-        return backend()->index();
-    }
-
-
-    DimensionType dimensionType() const {
-        return backend()->dimensionType();
-    }
-
-    /**
-     * @brief Assignment operator that converts a SampledDimension to Dimension.
-     *
-     * @param other     The dimension to assign.
-     */
-    Dimension& operator=(const SampledDimension &other);
-
-    /**
-     * @brief Assignment operator that converts a RangeDimension to Dimension.
-     *
-     * @param other     The dimension to assign.
-     */
-    Dimension& operator=(const RangeDimension &other);
-
-    /**
-     * @brief Assignment operator that converts a SetDimension to Dimension.
-     *
-     * @param other     The dimension to assign.
-     */
-    Dimension& operator=(const SetDimension &other);
-    
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-    
-    valid::Result validate() {
-        return valid::validate(std::initializer_list<valid::condition> {
-            valid::must(*this, &Dimension::index, valid::notSmaller(1), "index is not set to valid value (> 0)!")
-        });
-    }
-
-};
+class Dimension;
 
 
 /**
@@ -561,6 +432,148 @@ public:
 
 };
 
+
+/**
+ * @brief Instances of the Dimension subclasses are used to define the different dimensions of data in a DataArray.
+ *
+ * The real dimension descriptor are defined in three subclasses: RangeDimension, SampledDimension and  SetDimension
+ */
+class NIXAPI Dimension : public virtual base::IDimension, public base::ImplContainer<base::IDimension> {
+
+public:
+
+    /**
+     * @brief Constructor that creates an uninitialized Dimension.
+     *
+     * Calling any method on an uninitialized dimension will throw a {@link nix::UninitializedEntity}
+     * exception. The following code illustrates how to check if a dimension is initialized:
+     *
+     * ~~~
+     * Dimension e = ...;
+     * if (e) {
+     *     // e is initialised
+     * } else {
+     *     // e is uninitialized
+     * }
+     * ~~~
+     */
+    Dimension();
+
+    /**
+     * @brief Constructor that creates a new dimension from a shared pointer to
+     * an implementation instance.
+     *
+     * This constructor should only be used in the back-end.
+     */
+    Dimension(const std::shared_ptr<base::IDimension> &p_impl);
+
+    /**
+     * @brief Constructor with move semantics that creates a new dimension from a shared pointer to
+     * an implementation instance.
+     *
+     * This constructor should only be used in the back-end.
+     */
+    Dimension(std::shared_ptr<base::IDimension> &&ptr);
+
+
+    /**
+     * @brief Copy constructor
+     *
+     * Copying of all NIX front facing objects like Dimension is a rather cheap operation.
+     * Semantically this is equivalent to the creation of another reference to the original
+     * object.
+     *
+     * @param other     The dimension to copy.
+     */
+    Dimension(const Dimension &other);
+
+    /**
+     * @brief Copy constructor that converts a SampledDimension to Dimension.
+     *
+     * Copying of all NIX front facing objects like Dimension is a rather cheap operation.
+     * Semantically this is equivalent to the creation of another reference to the original
+     * object.
+     *
+     * @param other     The dimension to copy.
+     */
+    Dimension(const SampledDimension &other);
+
+    /**
+     * @brief Copy constructor that converts a RangeDimension to Dimension.
+     *
+     * Copying of all NIX front facing objects like Dimension is a rather cheap operation.
+     * Semantically this is equivalent to the creation of another reference to the original
+     * object.
+     *
+     * @param other     The dimension to copy.
+     */
+    Dimension(const RangeDimension &other);
+
+    /**
+     * @brief Copy constructor that converts a SetDimension to Dimension.
+     *
+     * Copying of all NIX front facing objects like Dimension is a rather cheap operation.
+     * Semantically this is equivalent to the creation of another reference to the original
+     * object.
+     *
+     * @param other     The dimension to copy.
+     */
+    Dimension(const SetDimension &other);
+
+
+    size_t index() const {
+        return backend()->index();
+    }
+
+
+    DimensionType dimensionType() const {
+        return backend()->dimensionType();
+    }
+    
+    SetDimension asSetDimension() const {
+        return SetDimension(std::dynamic_pointer_cast<base::ISetDimension>(impl()));
+    }
+    
+    SampledDimension asSampledDimension() const {
+        return SampledDimension(std::dynamic_pointer_cast<base::ISampledDimension>(impl()));
+    }
+    
+    RangeDimension asRangeDimension() const {
+        return RangeDimension(std::dynamic_pointer_cast<base::IRangeDimension>(impl()));
+    }
+
+    /**
+     * @brief Assignment operator that converts a SampledDimension to Dimension.
+     *
+     * @param other     The dimension to assign.
+     */
+    Dimension& operator=(const SampledDimension &other);
+
+    /**
+     * @brief Assignment operator that converts a RangeDimension to Dimension.
+     *
+     * @param other     The dimension to assign.
+     */
+    Dimension& operator=(const RangeDimension &other);
+
+    /**
+     * @brief Assignment operator that converts a SetDimension to Dimension.
+     *
+     * @param other     The dimension to assign.
+     */
+    Dimension& operator=(const SetDimension &other);
+    
+    //------------------------------------------------------
+    // Validation
+    //------------------------------------------------------
+    
+    valid::Result validate() {
+        return valid::validate(std::initializer_list<valid::condition> {
+            valid::must(*this, &Dimension::index, valid::notSmaller(1), "index is not set to valid value (> 0)!")
+        });
+    }
+
+};
 
 } // namespace nix
 
