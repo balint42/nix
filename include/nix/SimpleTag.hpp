@@ -237,8 +237,16 @@ public:
      *
      * @return A vector containing the matching data arrays.
      */
-    std::vector<DataArray> references(util::Filter<DataArray>::type filter = util::AcceptAll<DataArray>()) const
+    std::vector<DataArray> references(util::Filter<DataArray>::type filter) const
     {
+        auto f = [this] (size_t i) { return getReference(i); };
+        return getEntities<DataArray>(f,
+                                      referenceCount(),
+                                      filter);
+    }
+    std::vector<DataArray> references() const
+    {
+        util::Filter<DataArray>::type filter = util::AcceptAll<DataArray>();
         auto f = [this] (size_t i) { return getReference(i); };
         return getEntities<DataArray>(f,
                                       referenceCount(),
