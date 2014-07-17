@@ -386,72 +386,24 @@ public:
             valid::must(*this, &DataTag::positions, valid::notFalse(), "positions are not set!"),
             // since extents & positions DataArray stores a vector of position / extent vectors it has to be 2-dim
             valid::could(*this, &DataTag::positions, valid::notFalse(), {
-                valid::must(*this, 
-                &DataTag::positions, 
-                valid::dimEquals(2), 
-                "dimensionality of positions DataArray must be two!") }),
+                valid::must(*this, &DataTag::positions, valid::dimEquals(2), "dimensionality of positions DataArray must be two!") }),
             valid::could(*this, &DataTag::extents, valid::notFalse(), {
                 valid::must(*this, &DataTag::extents, valid::dimEquals(2), "dimensionality of positions DataArray must be two!") }),
             // check units for validity
             valid::could(*this, &DataTag::units, valid::notEmpty(), {
                 valid::must(*this, &DataTag::units, valid::isValidUnit(), "Some of the units in tag are invalid: not an atomic SI. Note: So far composite SI units are not supported!") }),
             valid::must(*this, &DataTag::references, valid::tagRefsHaveUnits(units()), "Some of the referenced DataArrays' dimensions don't have units where the tag has. Make sure that all references have the same number of dimensions as the tag has units and that each dimension has a unit set."),
-            valid::must(*this, &DataTag::references, valid::tagUnitsMatchRefsUnits(units()), "Some of the referenced DataArrays' dimensions have units that are not convertible to the units set in tag. Note: So far composite SI units are not supported!")
+            valid::must(*this, &DataTag::references, valid::tagUnitsMatchRefsUnits(units()), "Some of the referenced DataArrays' dimensions have units that are not convertible to the units set in tag. Note: So far composite SI units are not supported!"),
+            valid::could(*this, &DataTag::extents, valid::notFalse(), {
+                valid::must(*this, &DataTag::positions, valid::extentsMatchPositions<DataArray>(extents()), "Number of entries in positions and extents do not match!") }),
+            valid::could(*this, &DataTag::references, valid::notEmpty(), {
+                valid::could(*this, &DataTag::extents, valid::notFalse(), {
+                    valid::must(*this, &DataTag::extents, valid::extentsMatchRefs<decltype(references())>(references()), "number of entries (in 2nd dim) in extents does not match number of dimensions in all referenced DataArrays!") }) }),
+            valid::could(*this, &DataTag::references, valid::notEmpty(), {
+                    valid::must(*this, &DataTag::extents, valid::positionsMatchRefs<decltype(references())>(references()), "number of entries (in 2nd dim) in positions does not match number of dimensions in all referenced DataArrays!") })
+
         });
-        
-        // if tag is referencing any DataArrays check:
-        // rank of positions / extents == rank of all referenced DataArrays AND
-        // number of entries along each dim in positions / extents == number of entries along each dim in all referenced DataArrays
-        // we could use "=="-op of NDSize which does exactly that but then we wouldnt know which check went wrong
-        if(positions() && !references().empty()) {
-            auto refs = references();
-            size_t i;
-            bool mismatch = false;
-            NDSize posExtent = positions().dataExtent();
-            NDSize arrayExtent;
-            auto it = refs.begin();
-            while(!mismatch && (it != refs.end())) {
-                arrayExtent = (*it).dataExtent();
-                if(posExtent.size() != arrayExtent.size()) {
-                    mismatch = true;
-                    result.addError(valid::Message(id(), "positions dimensionality does not match referenced DataArray (id: " + (*it).id() + ") dimensionalities!"));
-                }
-                else {
-                    i = 0;
-                    while(!mismatch && (i < posExtent.size())) {
-                        mismatch = (posExtent[i] != arrayExtent[i]);
-                        result.addError(valid::Message(id(), "number of entries differ in positions and referenced DataArray along dimension " + util::numToStr(i) + "!"));
-                        i++;
-                    }
-                }
-                ++it;
-            }
-        }
-        if(extents() && !references().empty()) {
-            auto refs = references();
-            size_t i;
-            bool mismatch = false;
-            NDSize extExtent = extents().dataExtent();
-            NDSize arrayExtent;
-            auto it = refs.begin();
-            while(!mismatch && (it != refs.end())) {
-                arrayExtent = (*it).dataExtent();
-                if(extExtent.size() != arrayExtent.size()) {
-                    mismatch = true;
-                    result.addError(valid::Message(id(), "extents dimensionality does not match referenced DataArray (id: " + (*it).id() + ") dimensionalities!"));
-                }
-                else {
-                    i = 0;
-                    while(!mismatch && (i < extExtent.size())) {
-                        mismatch = (extExtent[i] != arrayExtent[i]);
-                        result.addError(valid::Message(id(), "number of entries differ in extents and referenced DataArray along dimension " + util::numToStr(i) + "!"));
-                        i++;
-                    }
-                }
-                ++it;
-            }
-        }
-        
+                
         return result.concat(result_base);
     }
 
