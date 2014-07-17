@@ -264,9 +264,16 @@ public:
      *
      * @return The filtered dimensions as a vector
      */
-    std::vector<Dimension> dimensions(util::AcceptAll<Dimension>::type filter
-                                      = util::AcceptAll<Dimension>()) const
+    std::vector<Dimension> dimensions(util::AcceptAll<Dimension>::type filter) const
     {
+        auto f = [this] (size_t i) { return getDimension(i+1); }; // +1 since index starts at 1
+        return getEntities<Dimension>(f,
+                                      dimensionCount(),
+                                      filter);
+    }
+    std::vector<Dimension> dimensions() const
+    {
+        util::AcceptAll<Dimension>::type filter = util::AcceptAll<Dimension>();
         auto f = [this] (size_t i) { return getDimension(i+1); }; // +1 since index starts at 1
         return getEntities<Dimension>(f,
                                       dimensionCount(),
@@ -489,12 +496,12 @@ public:
         valid::Result result_base = base::EntityWithSources<base::IDataArray>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
             valid::must(*this, &DataArray::dataType, valid::notEqual<DataType>(DataType::Nothing), "data type is not set!"),
-            valid::should(*this, &DataArray::dataExtent, valid::notEmpty(), "data extent is not set!"),
-            valid::should(*this, &DataArray::label, valid::notFalse(), "label is not set!"),
-            valid::should(*this, &DataArray::unit, valid::notFalse(), "unit is not set!"),
-            valid::should(*this, &DataArray::polynomCoefficients, valid::notEmpty(), "polynomial coefficients for calibration are not set!"),
-            valid::should(*this, &DataArray::expansionOrigin, valid::notFalse(), "expansion origin for calibration is not set!"),
-            valid::should(*this, &DataArray::dimensionCount, valid::isGreater(0), "dimensions are not set!"),
+            valid::should(*this, &DataArray::dimensionCount, valid::isEqual<size_t>(dataExtent().size()), "data dimensionality does not match number of defined dimensions!"),
+            valid::must(*this, &DataArray::unit, valid::isValidUnit(), "Unit is not SI or composite of SI units."),
+            valid::could(*this, &DataArray::polynomCoefficients, valid::notEmpty(), {
+                valid::should(*this, &DataArray::expansionOrigin, valid::notFalse(), "polynomial coefficients for calibration are set, but expansion origin is missing") }),
+            valid::could(*this, &DataArray::expansionOrigin, valid::notFalse(), {
+                valid::should(*this, &DataArray::polynomCoefficients, valid::notEmpty(), "expansion origin for calibration is set, but polynomial coefficients are missing") }),
         });
         
         return result.concat(result_base);

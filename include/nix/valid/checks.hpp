@@ -567,18 +567,50 @@ namespace valid {
      */
     template<typename T1>
     struct dimTicksMatchData {
-        const T1 dims;
+        const T1 data;
 
-        dimTicksMatchData(const T1 &dims) : dims(dims) {}
+        dimTicksMatchData(const T1 &data) : data(data) {}
     
         template<typename T2>
-        bool operator()(const T2 &data) const {
+        bool operator()(const T2 &dims) const {
             bool mismatch = false;
             auto it = dims.begin();
             while(!mismatch && it != dims.end()) {
                 if((*it).dimensionType() == DimensionType::Range) {
                     size_t dimIndex = (*it).index();
-                    mismatch = (*it).ticks().size() == data.dataExtent()[dimIndex];
+                    auto dim = (*it).asRangeDimension();
+                    mismatch = dim.ticks().size() == data.dataExtent()[dimIndex];
+                }
+                ++it;
+            }
+            
+            return mismatch;
+        }
+    };
+
+    /**
+     * @brief Check if set dimension specifics labels match data
+     * 
+     * One Check struct that checks whether the dimensions of type
+     * "Set" in the given dimensions vector have labels that match
+     * the given DataArray's data: number of labels == number of entries
+     * along the corresponding dimension in the data.
+     */
+    template<typename T1>
+    struct dimLabelsMatchData {
+        const T1 data;
+
+        dimLabelsMatchData(const T1 &data) : data(data) {}
+    
+        template<typename T2>
+        bool operator()(const T2 &dims) const {
+            bool mismatch = false;
+            auto it = dims.begin();
+            while(!mismatch && it != dims.end()) {
+                if((*it).dimensionType() == DimensionType::Set) {
+                    size_t dimIndex = (*it).index();
+                    auto dim = (*it).asSetDimension();
+                    mismatch = dim.labels().size() == data.dataExtent()[dimIndex];
                 }
                 ++it;
             }
