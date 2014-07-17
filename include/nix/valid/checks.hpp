@@ -461,6 +461,87 @@ namespace valid {
         } // bool operator()
     }; // struct
 
+    /**
+     * @brief Check if given number of positions and extents matches
+     * 
+     * One Check struct that checks whether the given number of
+     * positions matches the given number of extents. It is irrelevant
+     * which gets passed at construction time and which via operator().
+     */
+    template<typename T1>
+    struct extentsMatchPositions {
+        const T1 extents;
+        
+        extentsMatchPositions(const T1 &extents) : extents(extents) {}
+        
+        template<typename T2>
+        bool operator()(const T2 &positions) const {
+            // check that positions.dataExtent()[0] == extents.dataExtent()[0]
+            // and that   positions.dataExtent()[1] == extents.dataExtent()[1]
+            // and that   positions.dataExtent().size() == extents.dataExtent().size()
+            return positions.dataExtent() == extents.dataExtent();
+        }
+    };
+
+    /**
+     * @brief Check if number of extents (along 2nd dim) match number of references' data dims
+     * 
+     * One Check struct that checks whether the given number of
+     * extents (along 2nd dimensions of extents DataArray) matches the 
+     * given number of dimensions in each of the given referenced 
+     * DataArrays.
+     */
+    template<typename T1>
+    struct extentsMatchRefs {
+        const T1 refs;
+        
+        extentsMatchRefs(const T1 &refs) : refs(refs) {}
+
+        template<typename T2>
+        bool operator()(const T2 &extents) const {
+            bool mismatch = false;
+            auto extExtent = extents.dataExtent();
+            auto it = refs.begin();
+            while(!mismatch && (it != refs.end())) {
+                auto arrayExtent = (*it).dataExtent();
+                mismatch = extExtent[1] != arrayExtent.size();
+                ++it;
+            }
+            
+            return mismatch;
+        }
+    };
+
+    /**
+     * @brief Check if number of positions (along 2nd dim) match number of references' data dims
+     * 
+     * One Check struct that checks whether the given number of
+     * positions (along 2nd dimensions of extents DataArray) matches the 
+     * given number of dimensions in each of the given referenced 
+     * DataArrays.
+     */
+    template<typename T1>
+    struct positionsMatchRefs {
+        const T1 refs;
+
+        positionsMatchRefs(const T1 &refs) : refs(refs) {}
+    
+        template<typename T2>
+        bool operator()(const T2 &positions) const {
+            bool mismatch = false;
+            auto posExtent = positions.dataExtent();
+            auto it = refs.begin();
+            while(!mismatch && (it != refs.end())) {
+                auto arrayExtent = (*it).dataExtent();
+                mismatch = posExtent[1] != arrayExtent.size();
+                ++it;
+            }
+            
+            return mismatch;
+        }
+    };
+
+
 } // namespace valid
 } // namespace nix
 
