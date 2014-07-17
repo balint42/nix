@@ -526,14 +526,23 @@ public:
     }
     
     SetDimension asSetDimension() const {
+        if(dimensionType() != DimensionType::Set) {
+            throw IncompatibleDimensions("Dimension is not of type Set and thus cannot be cast to this type", "asSetDimension");
+        }
         return SetDimension(std::dynamic_pointer_cast<base::ISetDimension>(impl()));
     }
     
     SampledDimension asSampledDimension() const {
+        if(dimensionType() != DimensionType::Sample) {
+            throw IncompatibleDimensions("Dimension is not of type Sample and thus cannot be cast to this type", "asSampledDimension");
+        }
         return SampledDimension(std::dynamic_pointer_cast<base::ISampledDimension>(impl()));
     }
     
     RangeDimension asRangeDimension() const {
+        if(dimensionType() != DimensionType::Range) {
+            throw IncompatibleDimensions("Dimension is not of type Range and thus cannot be cast to this type", "asRangeDimension");
+        }
         return RangeDimension(std::dynamic_pointer_cast<base::IRangeDimension>(impl()));
     }
 
