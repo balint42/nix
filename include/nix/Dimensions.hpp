@@ -17,12 +17,7 @@
 
 namespace nix {
 
-
-class SampledDimension;
-class RangeDimension;
-class SetDimension;
 class Dimension;
-
 
 /**
  * @brief Dimension descriptor for regularly sampled dimensions.
