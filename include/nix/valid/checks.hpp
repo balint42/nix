@@ -17,7 +17,6 @@
 
 namespace nix {
 namespace valid {
-    
 
     /**
      * @brief Check if later given not greater than initally defined value.
@@ -555,6 +554,36 @@ namespace valid {
             extentsMatchRefs<T1> alias = extentsMatchRefs<T1>(refs);
             
             return alias(positions);
+        }
+    };
+
+    /**
+     * @brief Check if range dimension specifics ticks match data
+     * 
+     * One Check struct that checks whether the dimensions of type
+     * "Range" in the given dimensions vector have ticks that match
+     * the given DataArray's data: number of ticks == number of entries
+     * along the corresponding dimension in the data.
+     */
+    template<typename T1>
+    struct dimTicksMatchData {
+        const T1 dims;
+
+        dimTicksMatchData(const T1 &dims) : dims(dims) {}
+    
+        template<typename T2>
+        bool operator()(const T2 &data) const {
+            bool mismatch = false;
+            auto it = dims.begin();
+            while(!mismatch && it != dims.end()) {
+                if((*it).dimensionType() == DimensionType::Range) {
+                    size_t dimIndex = (*it).index();
+                    mismatch = (*it).ticks().size() == data.dataExtent()[dimIndex];
+                }
+                ++it;
+            }
+            
+            return mismatch;
         }
     };
 
