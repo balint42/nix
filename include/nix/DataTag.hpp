@@ -394,8 +394,9 @@ public:
                 valid::must(*this, &DataTag::units, valid::isValidUnit(), "Some of the units in tag are invalid: not an atomic SI. Note: So far composite SI units are not supported!") }),
             valid::must(*this, &DataTag::references, valid::tagRefsHaveUnits(units()), "Some of the referenced DataArrays' dimensions don't have units where the tag has. Make sure that all references have the same number of dimensions as the tag has units and that each dimension has a unit set."),
             valid::must(*this, &DataTag::references, valid::tagUnitsMatchRefsUnits(units()), "Some of the referenced DataArrays' dimensions have units that are not convertible to the units set in tag. Note: So far composite SI units are not supported!"),
+            // check positions & extents
             valid::could(*this, &DataTag::extents, valid::notFalse(), {
-                valid::must(*this, &DataTag::positions, valid::extentsMatchPositions<DataArray>(extents()), "Number of entries in positions and extents do not match!") }),
+                valid::must(*this, &DataTag::positions, valid::extentsMatchPositions<decltype(extents())>(extents()), "Number of entries in positions and extents do not match!") }),
             valid::could(*this, &DataTag::references, valid::notEmpty(), {
                 valid::could(*this, &DataTag::extents, valid::notFalse(), {
                     valid::must(*this, &DataTag::extents, valid::extentsMatchRefs<decltype(references())>(references()), "number of entries (in 2nd dim) in extents does not match number of dimensions in all referenced DataArrays!") }) }),
