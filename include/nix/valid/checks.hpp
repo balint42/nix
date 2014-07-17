@@ -497,9 +497,9 @@ namespace valid {
      * @brief Check if number of extents (along 2nd dim) match number of references' data dims
      * 
      * One Check struct that checks whether the given number of
-     * extents (along 2nd dimensions of extents DataArray) matches the 
-     * given number of dimensions in each of the given referenced 
-     * DataArrays.
+     * extents (if DataArray: size along 2nd dimensions of extents 
+     * DataArray; if vector: size of vector) matches the given number of 
+     * dimensions in each of the given referenced DataArrays.
      */
     template<typename T1>
     struct extentsMatchRefs {
@@ -520,15 +520,29 @@ namespace valid {
             
             return mismatch;
         }
+        bool operator()(const std::vector<double> &extents) const {
+            bool mismatch = false;
+            auto extSize = extents.size();
+            auto it = refs.begin();
+            while(!mismatch && (it != refs.end())) {
+                auto arrayExtent = (*it).dataExtent();
+                mismatch = extSize != arrayExtent.size();
+                ++it;
+            }
+            
+            return mismatch;
+        }
     };
 
     /**
      * @brief Check if number of positions (along 2nd dim) match number of references' data dims
      * 
      * One Check struct that checks whether the given number of
-     * positions (along 2nd dimensions of extents DataArray) matches the 
-     * given number of dimensions in each of the given referenced 
-     * DataArrays.
+     * positions (if DataArray: size along 2nd dimensions of positions 
+     * DataArray; if vector: size of vector) matches the given number of 
+     * dimensions in each of the given referenced DataArrays.
+     * Note: this is just an alias for extentsMatchRefs wich does the
+     * same thing.
      */
     template<typename T1>
     struct positionsMatchRefs {
@@ -538,16 +552,9 @@ namespace valid {
     
         template<typename T2>
         bool operator()(const T2 &positions) const {
-            bool mismatch = false;
-            auto posExtent = positions.dataExtent();
-            auto it = refs.begin();
-            while(!mismatch && (it != refs.end())) {
-                auto arrayExtent = (*it).dataExtent();
-                mismatch = posExtent[1] != arrayExtent.size();
-                ++it;
-            }
+            extentsMatchRefs<T1> alias = extentsMatchRefs<T1>(refs);
             
-            return mismatch;
+            return alias(positions);
         }
     };
 
