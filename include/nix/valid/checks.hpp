@@ -482,6 +482,16 @@ namespace valid {
             return positions.dataExtent() == extents.dataExtent();
         }
     };
+    template<>
+    struct extentsMatchPositions<std::vector<double>> {
+        const std::vector<double> extents;
+        
+        extentsMatchPositions(const std::vector<double> &extents) : extents(extents) {}
+        
+        bool operator()(const std::vector<double> &positions) const {
+            return positions.size() == extents.size();
+        }
+    };
 
     /**
      * @brief Check if number of extents (along 2nd dim) match number of references' data dims
