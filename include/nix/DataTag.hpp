@@ -401,7 +401,7 @@ public:
                 valid::could(*this, &DataTag::extents, valid::notFalse(), {
                     valid::must(*this, &DataTag::extents, valid::extentsMatchRefs<decltype(references())>(references()), "number of entries (in 2nd dim) in extents does not match number of dimensions in all referenced DataArrays!") }) }),
             valid::could(*this, &DataTag::references, valid::notEmpty(), {
-                valid::must(*this, &DataTag::extents, valid::positionsMatchRefs<decltype(references())>(references()), "number of entries (in 2nd dim) in positions does not match number of dimensions in all referenced DataArrays!") })
+                valid::must(*this, &DataTag::positions, valid::positionsMatchRefs<decltype(references())>(references()), "number of entries (in 2nd dim) in positions does not match number of dimensions in all referenced DataArrays!") })
         });
 
         return result.concat(result_base);
