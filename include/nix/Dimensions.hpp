@@ -353,7 +353,7 @@ public:
         return backend()->dimensionType();
     }
 
-     boost::optional<std::string> label() const {
+    boost::optional<std::string> label() const {
         return backend()->label();
     }
 
