@@ -365,12 +365,10 @@ public:
     valid::Result validate() {
         valid::Result result_base = base::NamedEntity<base::ISection>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-            valid::should(*this, &Section::sectionCount, valid::isEqual<bool>(util::hasEmptyEntity(sections())), "Section has empty sub sections!")
+            // TODO
         });
         
-        result.concat(result_base);
-        
-        return result;
+        return result.concat(result_base);
     }
 
 

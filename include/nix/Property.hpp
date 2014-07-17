@@ -210,24 +210,16 @@ public:
     //------------------------------------------------------
     
     valid::Result validate() {
-        valid::Result result_sub = valid::Result();
         valid::Result result_base = base::Entity<base::IProperty>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
             valid::must(*this, &Property::name, valid::notEmpty(), "name is not set!"),
-            valid::should(*this, &Property::unit, valid::isEqual<bool>((!!valueCount())), "values are set, but unit is missing!")
+            valid::could(*this, &Property::valueCount, valid::notFalse(), {
+                valid::should(*this, &Property::unit, valid::notFalse(), "values are set, but unit is missing!") }),
+            valid::must(*this, &DataArray::unit, valid::isValidUnit(), "Unit is not SI or composite of SI units.")
             // TODO: dataType to be tested too?
         });
-        
-        if(unit()) {
-            if(!(util::isSIUnit(*unit()) || util::isCompoundSIUnit(*unit()))) {
-                result_sub.addError(valid::Message(id(), "Unit is not SI or composite of SI units!"));
-            }
-        }
-        
-        result.concat(result_sub);
-        result.concat(result_base);
-        
-        return result;
+
+        return result.concat(result_base);
     }
 
 };
