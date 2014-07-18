@@ -385,7 +385,7 @@ public:
             valid::could(*this, &SimpleTag::extent, valid::notEmpty(), {
                 valid::must(*this, &SimpleTag::position, valid::notEmpty(), "Extent is set but position is missing!"),
                 valid::must(*this, &SimpleTag::position, valid::extentsMatchPositions<decltype(extent())>(extent()), "Number of entries in position and extent do not match!"),
-                valid::must(*this, &SimpleTag::extent, valid::extentsMatchRefs<decltype(references())>(references()), "number of entries in extent does not match number of dimensions in all referenced DataArrays!") })
+                valid::must(*this, &SimpleTag::extent, valid::extentsMatchRefs<decltype(references())>(references()), "number of entries in extent does not match number of dimensions in all referenced DataArrays!") }),
             valid::could(*this, &SimpleTag::position, valid::notEmpty(), {
                 valid::must(*this, &SimpleTag::position, valid::positionsMatchRefs<decltype(references())>(references()), "number of entries in position does not match number of dimensions in all referenced DataArrays!") })
         });

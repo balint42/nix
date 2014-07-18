@@ -215,7 +215,7 @@ public:
             valid::must(*this, &Property::name, valid::notEmpty(), "name is not set!"),
             valid::could(*this, &Property::valueCount, valid::notFalse(), {
                 valid::should(*this, &Property::unit, valid::notFalse(), "values are set, but unit is missing!") }),
-            valid::must(*this, &DataArray::unit, valid::isValidUnit(), "Unit is not SI or composite of SI units.")
+            valid::must(*this, &Property::unit, valid::isValidUnit(), "Unit is not SI or composite of SI units.")
             // TODO: dataType to be tested too?
         });
 
