@@ -63,23 +63,23 @@ size_t Group::objectCount() const {
 std::string Group::objectName(size_t index) const {
     std::string str_name;
     // check whether name is found by index
-    ssize_t name_len = H5Lget_name_by_idx(h5group.getLocId(), 
-                                                  ".", 
-                                                  H5_INDEX_NAME, 
-                                                  H5_ITER_NATIVE, 
-                                                  (hsize_t) index, 
-                                                  NULL, 
-                                                  0, 
+    ssize_t name_len = H5Lget_name_by_idx(h5group.getLocId(),
+                                                  ".",
+                                                  H5_INDEX_NAME,
+                                                  H5_ITER_NATIVE,
+                                                  (hsize_t) index,
+                                                  NULL,
+                                                  0,
                                                   H5P_DEFAULT);
     if(name_len > 0) {
         char* name = new char[name_len+1];
-        name_len = H5Lget_name_by_idx(h5group.getLocId(), 
-                                      ".", 
-                                      H5_INDEX_NAME, 
-                                      H5_ITER_NATIVE, 
-                                      (hsize_t) index, 
-                                      name, 
-                                      name_len+1, 
+        name_len = H5Lget_name_by_idx(h5group.getLocId(),
+                                      ".",
+                                      H5_INDEX_NAME,
+                                      H5_ITER_NATIVE,
+                                      (hsize_t) index,
+                                      name,
+                                      name_len+1,
                                       H5P_DEFAULT);
         str_name = name;
         delete [] name;

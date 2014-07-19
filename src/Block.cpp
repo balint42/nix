@@ -14,7 +14,7 @@ using namespace std;
 namespace nix {
 
     std::vector<Source> Block::findSources(util::Filter<Source>::type filter,
-                                           size_t max_depth) const 
+                                           size_t max_depth) const
     {
         const vector<Source> probes = sources();
         vector<Source> matches;

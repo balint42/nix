@@ -24,8 +24,8 @@ namespace hdf5 {
  * in. Thus when copying an entity it is enough to copy its group(s),
  * any ReferenceList will come along.
  * Its' intended use is to store references to other entities, e.g.
- * referenced {@link DataArray} entities in {@link SimpleTag} or 
- * {@link DataTag} entities. 
+ * referenced {@link DataArray} entities in {@link SimpleTag} or
+ * {@link DataTag} entities.
  */
 class NIXAPI ReferenceList {
 

@@ -120,7 +120,7 @@ NIXAPI bool isCompoundSIUnit(const std::string &unit);
  * 
  * @param unitB A string representing the second unit.
  *
- * @return True if the units are scalable version of the same unit. 
+ * @return True if the units are scalable version of the same unit.
  **/
 NIXAPI bool isScalable(const std::string &unitA, const std::string &unitB);
 

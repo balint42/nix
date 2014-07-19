@@ -22,7 +22,7 @@ namespace valid {
      * @brief Check if later given not greater than initally defined value.
      * 
      * One Check struct that checks whether the given value is not greater
-     * than the initially given other value, both of which have to be 
+     * than the initially given other value, both of which have to be
      * convertible to double.
      */
     struct notGreater {
@@ -41,7 +41,7 @@ namespace valid {
      * @brief Check if later given greater than initally defined value.
      * 
      * One Check struct that checks whether the given value is greater than
-     * the initially given other value, both of which have to be 
+     * the initially given other value, both of which have to be
      * convertible to double.
      */
     struct isGreater {
@@ -60,7 +60,7 @@ namespace valid {
      * @brief Check if later given not smaller than initally defined value.
      * 
      * One Check struct that checks whether the given value is not smaller
-     * than the initially given other value, both of which have to be 
+     * than the initially given other value, both of which have to be
      * convertible to double.
      */
     struct notSmaller {
@@ -79,7 +79,7 @@ namespace valid {
      * @brief Check if later given smaller than initally defined value.
      * 
      * One Check struct that checks whether the given value is smaller than
-     * the initially given other value, both of which have to be 
+     * the initially given other value, both of which have to be
      * convertible to double.
      */
     struct isSmaller {
@@ -229,7 +229,7 @@ namespace valid {
      * 
      * One Check struct that checks whether the given string(s) represent(s)
      * a valid atomic or compound SI unit.
-     * Parameter can be of type boost optional (containing nothing or 
+     * Parameter can be of type boost optional (containing nothing or
      * string) or of type string or a vector of strings.
      */
     struct isValidUnit : public isUnit {
@@ -250,7 +250,7 @@ namespace valid {
      * 
      * One Check struct that checks whether the given string(s) represent(s)
      * a valid atomic SI unit.
-     * Parameter can be of type boost optional (containing nothing or 
+     * Parameter can be of type boost optional (containing nothing or
      * string) or of type string or a vector of strings.
      */
     struct isAtomicUnit : public isUnit {
@@ -271,7 +271,7 @@ namespace valid {
      * 
      * One Check struct that checks whether the given string(s) represent(s)
      * a valid compound SI unit.
-     * Parameter can be of type boost optional (containing nothing or 
+     * Parameter can be of type boost optional (containing nothing or
      * string) or of type string or a vector of strings.
      */
     struct isCompoundUnit : public isUnit {
@@ -308,7 +308,7 @@ namespace valid {
      * @brief Check if given container is sorted using std::is_sorted
      * 
      * One Check struct that checks whether the given container is sorted
-     * according to std::is_sorted. Thus supports types that are 
+     * according to std::is_sorted. Thus supports types that are
      * supported by std::is_sorted.
      */
     struct isSorted {
@@ -322,7 +322,7 @@ namespace valid {
      * @brief Check if given DataArray has given dimensionality
      * 
      * One Check struct that checks whether the given DataArray entity
-     * has a dimensionality of the given uint value by getting its' 
+     * has a dimensionality of the given uint value by getting its'
      * NDSize class via the "dataExtent" method and checking its' size
      * via "size" the method.
      */
@@ -344,13 +344,13 @@ namespace valid {
      * DataArrays' dimensions all have units defined where the tag has.
      * (where the tag has means at the same index in the tag's units
      * vector as the dimension index in the referenced DataArray)
-     * Therefore it loops through all dimensions of all given references 
-     * and checks whether the dimension has a unit set if the tag has. 
+     * Therefore it loops through all dimensions of all given references
+     * and checks whether the dimension has a unit set if the tag has.
      * The test counts as passed if all dimensions have units set (where
      * the tag has). The test fails if the dimension has no unit set
      * (though the tag has) or if it is a dimension type without unit at
      * all (and the tag has a unit set) {@link SetDimension}.
-     * This is an extension of {@link tagUnitsMatchRefsUnits}, thus 
+     * This is an extension of {@link tagUnitsMatchRefsUnits}, thus
      * checks things {@link tagUnitsMatchRefsUnits} does not.
      */
     struct tagRefsHaveUnits {
@@ -409,7 +409,7 @@ namespace valid {
      * the unit with the same index in the given units vector.
      * The test counts as passed if all dimensions that have units set,
      * have units that are convertible. Thus this test does _not_ fail
-     * just because a dimension has no unit (by type or because not 
+     * just because a dimension has no unit (by type or because not
      * set). It _does_ fail if the number of dimensions in a referenced
      * DataArray differs the number of given units.
      * This is an extension of {@link tagRefsHaveUnits}, thus checks
@@ -494,8 +494,8 @@ namespace valid {
      * @brief Check if number of extents (along 2nd dim) match number of references' data dims
      * 
      * One Check struct that checks whether the given number of
-     * extents (if DataArray: size along 2nd dimensions of extents 
-     * DataArray; if vector: size of vector) matches the given number of 
+     * extents (if DataArray: size along 2nd dimensions of extents
+     * DataArray; if vector: size of vector) matches the given number of
      * dimensions in each of the given referenced DataArrays.
      */
     template<typename T1>
@@ -535,8 +535,8 @@ namespace valid {
      * @brief Check if number of positions (along 2nd dim) match number of references' data dims
      * 
      * One Check struct that checks whether the given number of
-     * positions (if DataArray: size along 2nd dimensions of positions 
-     * DataArray; if vector: size of vector) matches the given number of 
+     * positions (if DataArray: size along 2nd dimensions of positions
+     * DataArray; if vector: size of vector) matches the given number of
      * dimensions in each of the given referenced DataArrays.
      * Note: this is just an alias for extentsMatchRefs wich does the
      * same thing.

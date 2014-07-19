@@ -52,7 +52,7 @@ FeatureHDF5::FeatureHDF5(const File &file, const Block &block, const Group &grou
     linkType(link_type);
     // TODO: the line below currently throws an exception if the DataArray
     // is not in block - to consider if we prefer copying it to the block
-    this->data(data.id()); 
+    this->data(data.id());
 }
 
 

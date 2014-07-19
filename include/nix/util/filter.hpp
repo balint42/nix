@@ -19,7 +19,7 @@ namespace util {
 /**
  * Base struct to be inherited by all filter implementations.
  * Child classes will have to implement ()-operator and will
- * all inherit typedef "type" which corresponds to the type of "()". 
+ * all inherit typedef "type" which corresponds to the type of "()".
  */
 template<typename T>
 struct Filter : public std::unary_function<T, bool> {
@@ -33,7 +33,7 @@ struct Filter : public std::unary_function<T, bool> {
 
 /**
  * One Filter struct to that filters nothing but always returns true.
- * Use "AcceptAll<T>()" to pass it on as filter and "::type" to define 
+ * Use "AcceptAll<T>()" to pass it on as filter and "::type" to define
  * its' type.
  */
 template<typename T>

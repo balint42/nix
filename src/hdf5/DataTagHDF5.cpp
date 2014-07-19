@@ -27,7 +27,7 @@ DataTagHDF5::DataTagHDF5(const DataTagHDF5 &tag)
 }
 
 
-DataTagHDF5::DataTagHDF5(const File &file, const Block &block, const Group &group, 
+DataTagHDF5::DataTagHDF5(const File &file, const Block &block, const Group &group,
                          const string &id, const std::string &type, const string &name, const DataArray positions)
     : DataTagHDF5(file, block, group, id, type, name, positions, util::getTime())
 {
@@ -224,7 +224,7 @@ size_t DataTagHDF5::featureCount() const {
 
 
 Feature DataTagHDF5::getFeature(const std::string &id) const {
-    if (feature_group.hasGroup(id)) { 
+    if (feature_group.hasGroup(id)) {
         Group group = feature_group.openGroup(id, false);
         string link_type;
         group.getAttr("link_type", link_type);

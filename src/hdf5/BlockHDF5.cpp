@@ -140,7 +140,7 @@ size_t BlockHDF5::simpleTagCount() const {
 }
 
 
-SimpleTag BlockHDF5::createSimpleTag(const string &name, const string &type, 
+SimpleTag BlockHDF5::createSimpleTag(const string &name, const string &type,
                                      const std::vector<DataArray> &refs) {
     string id = util::createId("simple_tag");
 
@@ -232,7 +232,7 @@ bool BlockHDF5::deleteDataArray(const string &id) {
 
 // Methods related to DataTag
 
-DataTag BlockHDF5::createDataTag(const std::string &name, const std::string &type, 
+DataTag BlockHDF5::createDataTag(const std::string &name, const std::string &type,
                                  const DataArray positions) {
     string id = util::createId("data_tag");
     while (hasDataTag(id)) {

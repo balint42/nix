@@ -17,7 +17,7 @@ namespace hdf5 {
 
 
 EntityWithSourcesHDF5::EntityWithSourcesHDF5
-                    (File file, Block block, Group group, const string &id, 
+                    (File file, Block block, Group group, const string &id,
                      const string &type, const string &name)
     : EntityWithSourcesHDF5(file, block, group, id, type, name, util::getTime())
 {
@@ -25,7 +25,7 @@ EntityWithSourcesHDF5::EntityWithSourcesHDF5
 
 
 EntityWithSourcesHDF5::EntityWithSourcesHDF5
-                       (File file, Block block, Group group, const string &id, 
+                       (File file, Block block, Group group, const string &id,
                         const string &type, const string &name, time_t time)
     : EntityWithMetadataHDF5(file, group, id, type, name, time), entity_block(block), sources_refs(group, "sources")
 {

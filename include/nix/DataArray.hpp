@@ -483,11 +483,11 @@ public:
     }
 
     double applyPolynomial(std::vector<double> &coefficients, double origin, double input) const;
-    
+
     //------------------------------------------------------
     // Validation
     //------------------------------------------------------
-    
+
     valid::Result validate() {
         valid::Result result_base = base::EntityWithSources<base::IDataArray>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {

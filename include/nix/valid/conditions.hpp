@@ -139,7 +139,7 @@ namespace valid {
     /**
      * @brief creates condition not throwing any message even if check fails
      * 
-     * Creates a condition check that produces no message even if the 
+     * Creates a condition check that produces no message even if the
      * given function call's return value does not pass the test.
      * It is meant to be used to execute sub-conditions only if test passes
      * without this condition causing errors/warnings if it fails.
@@ -186,7 +186,7 @@ namespace valid {
             for(auto &sub : subs) {
                 result = result.concat( sub() );
             }
-            return result; 
+            return result;
         };
     }
 

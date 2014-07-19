@@ -120,7 +120,7 @@ public:
     size_t simpleTagCount() const;
 
 
-    SimpleTag createSimpleTag(const std::string &name, const std::string &type, 
+    SimpleTag createSimpleTag(const std::string &name, const std::string &type,
                               const std::vector<DataArray> &refs);
 
 
@@ -142,7 +142,7 @@ public:
     size_t dataTagCount() const;
 
 
-    DataTag createDataTag(const std::string &name, const std::string &type, 
+    DataTag createDataTag(const std::string &name, const std::string &type,
                           const DataArray positions);
 
 

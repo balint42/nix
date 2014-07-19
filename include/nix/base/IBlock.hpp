@@ -207,7 +207,7 @@ public:
      *
      * @return The newly created tag.
      */
-    virtual SimpleTag createSimpleTag(const std::string &name, const std::string &type, 
+    virtual SimpleTag createSimpleTag(const std::string &name, const std::string &type,
                                       const std::vector<DataArray> &refs) = 0;
 
     /**
@@ -270,7 +270,7 @@ public:
      *
      * @return The newly created tag.
      */
-    virtual DataTag createDataTag(const std::string &name, const std::string &type, 
+    virtual DataTag createDataTag(const std::string &name, const std::string &type,
                                   const DataArray positions) = 0;
 
     /**

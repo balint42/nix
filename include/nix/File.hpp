@@ -354,7 +354,7 @@ public:
         
         // block childs
         for(auto it = blocks.begin(); it != blocks.end(); ++it) {
-            ent_sub 
+            ent_sub
         }*/
 
         return result;//.concat(result_sub);
