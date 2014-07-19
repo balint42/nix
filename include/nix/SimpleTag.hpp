@@ -246,11 +246,7 @@ public:
     }
     std::vector<DataArray> references() const
     {
-        util::Filter<DataArray>::type filter = util::AcceptAll<DataArray>();
-        auto f = [this] (size_t i) { return getReference(i); };
-        return getEntities<DataArray>(f,
-                                      referenceCount(),
-                                      filter);
+        return references(util::AcceptAll<DataArray>());
     }
 
     void references(const std::vector<DataArray> &references) {

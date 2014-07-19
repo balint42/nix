@@ -273,11 +273,7 @@ public:
     }
     std::vector<Dimension> dimensions() const
     {
-        util::AcceptAll<Dimension>::type filter = util::AcceptAll<Dimension>();
-        auto f = [this] (size_t i) { return getDimension(i+1); }; // +1 since index starts at 1
-        return getEntities<Dimension>(f,
-                                      dimensionCount(),
-                                      filter);
+        return dimensions(util::AcceptAll<Dimension>());
     }
 
     /**
