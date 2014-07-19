@@ -17,9 +17,9 @@ namespace valid {
 Result validate(std::vector<condition> li) {
     Result result = Result();
 
-    for (auto it = li.begin(); it != li.end(); ++it) {
+    for (auto &sub : li) {
          result = result.concat(
-            (*it)()
+            sub()
         );
     }
 
