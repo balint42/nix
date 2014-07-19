@@ -75,8 +75,8 @@ namespace valid {
 
             // passed
             Result result = Result();
-            for(auto it = subs.begin(); it != subs.end(); ++it) {
-                result = result.concat( (*it)() );
+            for(auto &sub : subs) {
+                result = result.concat( sub() );
             }
             return result;
         };
@@ -129,8 +129,8 @@ namespace valid {
 
             // passed
             Result result = Result();
-            for(auto it = subs.begin(); it != subs.end(); ++it) {
-                result = result.concat( (*it)() );
+            for(auto &sub : subs) {
+                result = result.concat( sub() );
             }
             return result;
         };
@@ -183,8 +183,8 @@ namespace valid {
     
             // passed
             Result result = Result();
-            for(auto it = subs.begin(); it != subs.end(); ++it) {
-                result = result.concat( (*it)() );
+            for(auto &sub : subs) {
+                result = result.concat( sub() );
             }
             return result; 
         };
