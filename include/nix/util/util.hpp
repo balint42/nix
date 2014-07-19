@@ -162,7 +162,7 @@ NIXAPI void splitCompoundUnit(const std::string &compoundUnit, std::vector<std::
  *
  * @return The value in converted to seconds
 */
-template <typename T>
+template<typename T>
 T convertToSeconds(const std::string &unit, T value) {
     T seconds;
     if (unit == "min") {

@@ -39,20 +39,20 @@ namespace valid {
      * USAGE: hasID<TOBJ>::value
      */
 #ifndef _WIN32
-    template <typename T>
+    template<typename T>
     class NIXAPI hasID
     {
         typedef char one;
         typedef long two;
 
-        template <typename C> static one test( decltype(&C::id) ) ;
-        template <typename C> static two test(...);
+        template<typename C> static one test( decltype(&C::id) ) ;
+        template<typename C> static two test(...);
 
     public:
         enum { value = sizeof(test<T>(0)) == sizeof(char) };
     };
 #else
-	template <typename T>
+	template<typename T>
 	class hasID
 	{
 	public:
@@ -73,20 +73,20 @@ namespace valid {
      * USAGE: hasUnit<TOBJ>::value
      */
 #ifndef _WIN32
-    template <typename T>
+    template<typename T>
     class NIXAPI hasUnit
     {
         typedef char one;
         typedef long two;
 
-        template <typename C> static one test( decltype(&C::unit) ) ;
-        template <typename C> static two test(...);
+        template<typename C> static one test( decltype(&C::unit) ) ;
+        template<typename C> static two test(...);
 
     public:
         enum { value = sizeof(test<T>(0)) == sizeof(char) };
     };
 #else
-	template <typename T>
+	template<typename T>
 	class hasUnit
 	{
 	public:
@@ -107,20 +107,20 @@ namespace valid {
      * USAGE: hasEmpty<TOBJ>::value
      */
 #ifndef _WIN32
-    template <typename T>
+    template<typename T>
     class NIXAPI hasEmpty
     {
         typedef char one;
         typedef long two;
 
-        template <typename C> static one test( decltype(&C::empty) ) ;
-        template <typename C> static two test(...);
+        template<typename C> static one test( decltype(&C::empty) ) ;
+        template<typename C> static two test(...);
 
     public:
         enum { value = sizeof(test<T>(0)) == sizeof(char) };
     };
 #else
-	template <typename T>
+	template<typename T>
 	class hasEmpty
 	{
 	public:
@@ -141,18 +141,18 @@ namespace valid {
      * is true and return string "unknown" otherwise.
      * USAGE: ID< hasID<TOBJ>::value >().get(obj)
      */
-    template <bool HAS_ID>
+    template<bool HAS_ID>
     class NIXAPI ID {
     public:
-        template <typename TOBJ>
+        template<typename TOBJ>
         auto get(TOBJ parent) -> decltype(parent.id()) {
             return parent.id();
         }
     };
-    template <>
+    template<>
     class NIXAPI ID<false> {
     public:
-        template <typename TOBJ>
+        template<typename TOBJ>
         std::string get(TOBJ parent) {
             return std::string("unknown");
         }
@@ -166,18 +166,18 @@ namespace valid {
      * is true and return empty string otherwise.
      * USAGE: ID< hasID<TOBJ>::value >().get(obj)
      */
-    template <bool HAS_UNIT>
+    template<bool HAS_UNIT>
     class NIXAPI Unit {
     public:
-        template <typename TOBJ>
+        template<typename TOBJ>
         auto get(TOBJ parent) -> decltype(parent.unit()) {
             return parent.unit();
         }
     };
-    template <>
+    template<>
     class NIXAPI Unit<false> {
     public:
-        template <typename TOBJ>
+        template<typename TOBJ>
         std::string get(TOBJ parent) {
             return std::string();
         }
