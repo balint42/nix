@@ -201,7 +201,7 @@ namespace valid {
             return val.empty();
         }
     };
-    
+    struct isValidUnit;
     /**
      * @brief Check if given class represents valid SI unit string(s)
      * 
@@ -217,16 +217,10 @@ namespace valid {
             return u && (*this)(*u);
         }
         
-        bool operator()(const std::vector<std::string> &u) const {
-            bool isValid = true;
-            
-            auto itU = u.begin();
-            while(isValid && itU != u.end()) {
-                isValid = (*this)(*itU);
-                ++itU;
-            }
-            
-            return isValid;
+        template<typename T>
+        bool operator()(const std::vector<std::string> &u, T obj) const {
+            // if test fails we have invalid unit & find_if_not will return it != end
+            return std::find_if_not(u.begin(), u.end(), obj) != u.end();
         }
     };
 
@@ -247,7 +241,7 @@ namespace valid {
             return isUnit::operator()<T>(u);
         }
         bool operator()(const std::vector<std::string> &u) const {
-            return isUnit::operator()(u);
+            return isUnit::operator()(u, *this);
         }
     };
 
@@ -268,7 +262,7 @@ namespace valid {
             return isUnit::operator()<T>(u);
         }
         bool operator()(const std::vector<std::string> &u) const {
-            return isUnit::operator()(u);
+            return isUnit::operator()(u, *this);
         }
     };
 
@@ -289,7 +283,7 @@ namespace valid {
             return isUnit::operator()<T>(u);
         }
         bool operator()(const std::vector<std::string> &u) const {
-            return isUnit::operator()(u);
+            return isUnit::operator()(u, *this);
         }
     };
 
