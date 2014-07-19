@@ -241,11 +241,11 @@ public:
         // set ID prefixes
         res.setIdPrefixes(tmp_errors, tmp_warnings);
         // output messages with prefixes
-        for(auto it = tmp_warnings.begin(); it != tmp_warnings.end(); ++it) {
-            out << (*it).msg << std::endl;
+        for(auto &tmp_warn : tmp_warnings) {
+            out << tmp_warn.msg << std::endl;
         }
-        for(auto it = tmp_errors.begin(); it != tmp_errors.end(); ++it) {
-            out << (*it).msg << std::endl;
+        for(auto &tmp_err : tmp_errors) {
+            out << tmp_err.msg << std::endl;
         }
 
         return out;
