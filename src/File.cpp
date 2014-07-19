@@ -29,9 +29,8 @@ vector<Section> File::findSections(util::Filter<Section>::type filter, size_t ma
     vector<Section> results;
 
     vector<Section> roots = sections();
-    for (auto it = roots.begin(); it != roots.end(); ++it) {
-
-        vector<Section> secs = it->findSections(filter, max_depth);
+    for (auto root : roots) {
+        vector<Section> secs = root.findSections(filter, max_depth);
         results.insert(results.end(), secs.begin(), secs.end());
     }
 
@@ -46,6 +45,73 @@ valid::Result File::validate() const {
             valid::should(*this, &File::format, valid::notEmpty(), "format is not set!"),
             valid::should(*this, &File::location, valid::notEmpty(), "location is not set!") })
     });
+        
+    // now get all entities from the file: use the multi-getter for each type of entity
+    // (the multi-getters use size_t-getter which in the end use H5Lget_name_by_idx
+    // to get each file objects name - the count is determined by H5::Group::getNumObjs
+    // so that in the end really all file objects are retrieved)
+    
+    // Blocks
+    auto blcks = blocks();
+    for(auto &block : blcks) {
+        result.concat(block.validate());
+        // DataArrays
+        auto data_arrays = block.dataArrays();
+        for(auto &data_array : data_arrays) {
+            result.concat(data_array.validate());
+            // Dimensions
+            auto dims = data_array.dimensions();
+            for(auto &dim : dims) {
+                if(dim.dimensionType() == DimensionType::Range) {
+                    auto d = dim.asRangeDimension();
+                    result.concat(d.validate());
+                }
+                if(dim.dimensionType() == DimensionType::Set) {
+                    auto d = dim.asSetDimension();
+                    result.concat(d.validate());
+                }
+                if(dim.dimensionType() == DimensionType::Sample) {
+                    auto d = dim.asSampledDimension();
+                    result.concat(d.validate());
+                }
+            }
+        }
+        // DataTags
+        auto data_tags = block.dataTags();
+        for(auto &data_tag : data_tags) {
+            result.concat(data_tag.validate());
+            // Features
+            auto features = data_tag.features();
+            for(auto &feature : features) {
+                result.concat(feature.validate());
+            }
+        }
+        // SimpleTags
+        auto simple_tags = block.simpleTags();
+        for(auto &simple_tag : simple_tags) {
+            result.concat(simple_tag.validate());
+            // Features
+            auto features = simple_tag.features();
+            for(auto &feature : features) {
+                result.concat(feature.validate());
+            }
+        }
+        // Sources
+        auto sources = block.findSources();
+        for(auto &source : sources) {
+            result.concat(source.validate());
+        }
+    }
+    // Sections
+    auto sections = findSections();
+    for(auto &section : sections) {
+        result.concat(section.validate());
+        // Properties
+        auto props = section.properties();
+        for(auto &prop : props) {
+            result.concat(prop.validate());
+        }
+    }
 
     return result;
 }
