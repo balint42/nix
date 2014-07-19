@@ -14,7 +14,7 @@
 namespace nix {
 namespace valid {
 
-Result validate(std::vector<condition> li) {
+Result validate(const std::vector<condition> &li) {
     Result result = Result();
 
     for (auto &sub : li) {
