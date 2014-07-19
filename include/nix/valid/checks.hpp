@@ -201,23 +201,22 @@ namespace valid {
             return val.empty();
         }
     };
-
+    
     /**
      * @brief Check if given class represents valid SI unit string(s)
      * 
-     * One Check struct that checks whether the given string(s) represent(s)
-     * a valid atomic or compound SI unit.
-     * Parameter can be of type boost optional (containing nothing or 
-     * string) or of type string or a vector of strings.
+     * Base struct to be inherited by the {@link isValidUnit}, {@link
+     * isAtomicUnit}, {@link isCompoundUnit}. Not viable on its own!
      */
-    struct isValidUnit {
-        bool operator()(const std::string &u) const {
-            return (util::isSIUnit(u) || util::isCompoundSIUnit(u));
-        }
+    struct isUnit {
+        virtual bool operator()(const std::string &u) const = 0;
+        
         template<typename T>
         bool operator()(const boost::optional<T> &u) const {
-            return u ? (*this)(*u) : false;
+            // note: relying on short-curcuiting here
+            return u && (*this)(*u);
         }
+        
         bool operator()(const std::vector<std::string> &u) const {
             bool isValid = true;
             
@@ -228,6 +227,27 @@ namespace valid {
             }
             
             return isValid;
+        }
+    };
+
+    /**
+     * @brief Check if given class represents valid SI unit string(s)
+     * 
+     * One Check struct that checks whether the given string(s) represent(s)
+     * a valid atomic or compound SI unit.
+     * Parameter can be of type boost optional (containing nothing or 
+     * string) or of type string or a vector of strings.
+     */
+    struct isValidUnit : public isUnit {
+        bool operator()(const std::string &u) const {
+            return (util::isSIUnit(u) || util::isCompoundSIUnit(u));
+        }
+        template<typename T>
+        bool operator()(const boost::optional<T> &u) const {
+            return isUnit::operator()<T>(u);
+        }
+        bool operator()(const std::vector<std::string> &u) const {
+            return isUnit::operator()(u);
         }
     };
 
@@ -239,24 +259,16 @@ namespace valid {
      * Parameter can be of type boost optional (containing nothing or 
      * string) or of type string or a vector of strings.
      */
-    struct isAtomicUnit {
+    struct isAtomicUnit : public isUnit {
         bool operator()(const std::string &u) const {
             return util::isSIUnit(u);
         }
         template<typename T>
         bool operator()(const boost::optional<T> &u) const {
-            return u ? (*this)(*u) : false;
+            return isUnit::operator()<T>(u);
         }
         bool operator()(const std::vector<std::string> &u) const {
-            bool isValid = true;
-            
-            auto itU = u.begin();
-            while(isValid && itU != u.end()) {
-                isValid = (*this)(*itU);
-                ++itU;
-            }
-            
-            return isValid;
+            return isUnit::operator()(u);
         }
     };
 
@@ -268,24 +280,16 @@ namespace valid {
      * Parameter can be of type boost optional (containing nothing or 
      * string) or of type string or a vector of strings.
      */
-    struct isCompoundUnit {
+    struct isCompoundUnit : public isUnit {
         bool operator()(const std::string &u) const {
             return util::isCompoundSIUnit(u);
         }
         template<typename T>
         bool operator()(const boost::optional<T> &u) const {
-            return u ? (*this)(*u) : false;
+            return isUnit::operator()<T>(u);
         }
         bool operator()(const std::vector<std::string> &u) const {
-            bool isValid = true;
-            
-            auto itU = u.begin();
-            while(isValid && itU != u.end()) {
-                isValid = (*this)(*itU);
-                ++itU;
-            }
-            
-            return isValid;
+            return isUnit::operator()(u);
         }
     };
 
