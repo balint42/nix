@@ -148,12 +148,8 @@ public:
     // Validation
     //------------------------------------------------------
     
-    valid::Result validate() {
-        valid::Result result_base = EntityWithMetadata<T>::validate();
-        valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-        });
-        
-        return result.concat(result_base);
+    valid::Result validate() const {
+        return EntityWithMetadata<T>::validate();
     }
 
 };

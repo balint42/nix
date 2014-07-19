@@ -362,13 +362,8 @@ public:
     // Validation
     //------------------------------------------------------
     
-    valid::Result validate() {
-        valid::Result result_base = base::NamedEntity<base::ISection>::validate();
-        valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-            // TODO
-        });
-        
-        return result.concat(result_base);
+    valid::Result validate() const {
+        return base::NamedEntity<base::ISection>::validate();
     }
 
 

@@ -494,7 +494,7 @@ public:
     // Validation
     //------------------------------------------------------
     
-    valid::Result validate() {
+    valid::Result validate() const {
         return base::EntityWithMetadata<base::IBlock>::validate();
     }
 

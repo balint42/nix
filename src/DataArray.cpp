@@ -20,4 +20,22 @@ double DataArray::applyPolynomial(std::vector<double> &coefficients, double orig
     return value;
 }
 
+valid::Result DataArray::validate() const {
+    valid::Result result_base = base::EntityWithSources<base::IDataArray>::validate();
+    valid::Result result = valid::validate(std::initializer_list<valid::condition> {
+        valid::must(*this, &DataArray::dataType, valid::notEqual<DataType>(DataType::Nothing), "data type is not set!"),
+        valid::should(*this, &DataArray::dimensionCount, valid::isEqual<size_t>(dataExtent().size()), "data dimensionality does not match number of defined dimensions!"),
+        valid::must(*this, &DataArray::unit, valid::isValidUnit(), "Unit is not SI or composite of SI units."),
+        valid::could(*this, &DataArray::polynomCoefficients, valid::notEmpty(), {
+            valid::should(*this, &DataArray::expansionOrigin, valid::notFalse(), "polynomial coefficients for calibration are set, but expansion origin is missing!") }),
+        valid::could(*this, &DataArray::expansionOrigin, valid::notFalse(), {
+            valid::should(*this, &DataArray::polynomCoefficients, valid::notEmpty(), "expansion origin for calibration is set, but polynomial coefficients are missing!") }),
+        valid::could(*this, &DataArray::dimensions, valid::notEmpty(), {
+            valid::must(*this, &DataArray::dimensions, valid::dimTicksMatchData<DataArray>(*this), "in some of the Range dimensions the number of ticks differs from the number of data entries along the corresponding data dimension!"),
+            valid::must(*this, &DataArray::dimensions, valid::dimLabelsMatchData<DataArray>(*this), "in some of the Set dimensions the number of labels differs from the number of data entries along the corresponding data dimension!") })
+    });
+        
+    return result.concat(result_base);
+}
+    
 }

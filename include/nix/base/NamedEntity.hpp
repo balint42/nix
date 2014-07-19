@@ -110,7 +110,7 @@ public:
     // Validation
     //------------------------------------------------------
     
-    valid::Result validate() {
+    valid::Result validate() const {
         valid::Result result_base = Entity<T>::validate();
         valid::Result result = valid::validate(std::initializer_list<valid::condition> {
             valid::must(*this, &NamedEntity::name, valid::notEmpty(), "no name set!"),
