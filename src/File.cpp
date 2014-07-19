@@ -46,24 +46,8 @@ valid::Result File::validate() const {
             valid::should(*this, &File::format, valid::notEmpty(), "format is not set!"),
             valid::should(*this, &File::location, valid::notEmpty(), "location is not set!") })
     });
-        
-    // now get all entities from the file: use the multi-getter for each type of entity
-    // (the multi-getters use size_t-getter which in the end use H5Lget_name_by_idx
-    // to get each file objects name - the count is determined by H5::Group::getNumObjs
-    // so that in the end really all file objects are retrieved)
-    /*std::vector entities, vec_tmp;
-        
-    // blocks
-    ent_sub = blocks();
-    entities.reserve(entities.size() + ent_sub.size());
-    entities.insert(entities.end(), ent_sub.begin(), ent_sub.end());
-        
-    // block childs
-    for(auto it = blocks.begin(); it != blocks.end(); ++it) {
-        ent_sub
-    }*/
 
-    return result;//.concat(result_sub);
+    return result;
 }
 
 }
