@@ -201,7 +201,7 @@ namespace valid {
             return val.empty();
         }
     };
-    struct isValidUnit;
+    
     /**
      * @brief Check if given class represents valid SI unit string(s)
      * 
