@@ -68,40 +68,6 @@ namespace valid {
 #endif
 
     /**
-     * @brief Helper to check classes for an "unit" method via SFINAE
-     * 
-     * Helper class that checks whether a given class or struct has
-     * a method called "unit"
-     * USAGE: hasUnit<TOBJ>::value
-     */
-#ifndef _WIN32
-    template<typename T>
-    class NIXAPI hasUnit
-    {
-        typedef char one;
-        typedef long two;
-
-        template<typename C> static one test( decltype(&C::unit) ) ;
-        template<typename C> static two test(...);
-
-    public:
-        enum { value = sizeof(test<T>(0)) == sizeof(char) };
-    };
-#else
-	template<typename T>
-	class hasUnit
-	{
-	public:
-		__if_exists(T::unit) {
-			static const bool value = true;
-		}
-		__if_not_exists(T::unit) {
-			static const bool value = false;
-		}
-	};
-#endif
-
-    /**
      * @brief Helper to check classes for an "empty" method via SFINAE
      * 
      * Helper class that checks whether a given class or struct has
@@ -157,31 +123,6 @@ namespace valid {
         template<typename TOBJ>
         std::string get(TOBJ parent) {
             return std::string("unknown");
-        }
-    };
-
-    /**
-     * @brief Helper calling "unit" method in class if and only if it exists (SFINAE)
-     * 
-     * Helper class with "get" method that will execute a given
-     * objects "unit" method & return result if "HAS_UNIT" template param
-     * is true and return empty string otherwise.
-     * USAGE: ID< hasID<TOBJ>::value >().get(obj)
-     */
-    template<bool HAS_UNIT>
-    class NIXAPI Unit {
-    public:
-        template<typename TOBJ>
-        auto get(TOBJ parent) -> decltype(parent.unit()) {
-            return parent.unit();
-        }
-    };
-    template<>
-    class NIXAPI Unit<false> {
-    public:
-        template<typename TOBJ>
-        std::string get(TOBJ parent) {
-            return std::string();
         }
     };
 
