@@ -242,7 +242,7 @@ public:
      * @brief Get all referenced data arrays associated with the tag.
      *
      * The parameter filter can be used to filter data arrays by various
-     * criteria. By default a filter is used that accepts all data arrays.
+     * criteria.
      *
      * @param filter       A filter function.
      *
@@ -255,6 +255,13 @@ public:
                                       referenceCount(),
                                       filter);
     }
+    /**
+     * @brief Get all referenced data arrays associated with the tag.
+     *
+     * Always uses filter that accepts all sources.
+     *
+     * @return A vector containing all filtered DataArray entities.
+     */
     std::vector<DataArray> references() const
     {
         return references(util::AcceptAll<DataArray>());

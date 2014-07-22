@@ -231,7 +231,7 @@ public:
      * @brief Get referenced data arrays associated with this simple tag.
      *
      * The parameter filter can be used to filter data arrays by various
-     * criteria. By default a filter is used that accepts all data arrays.
+     * criteria.
      *
      * @param filter    A filter function.
      *
@@ -244,6 +244,14 @@ public:
                                       referenceCount(),
                                       filter);
     }
+    /**
+     * @brief Get all referenced data arrays associated with this simple 
+     * tag.
+     *
+     * Always uses filter that accepts all sources.
+     *
+     * @return The filtered dimensions as a vector
+     */
     std::vector<DataArray> references() const
     {
         return references(util::AcceptAll<DataArray>());

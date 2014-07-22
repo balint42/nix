@@ -255,10 +255,10 @@ public:
     //--------------------------------------------------
 
     /**
-     * Get all dimensions associated with this data array.
+     * @brief Get all dimensions associated with this data array.
      *
      * The parameter filter can be used to filter sources by various
-     * criteria. By default a filter is used that accepts all sources.
+     * criteria.
      *
      * @param filter    A filter function ({@link nix::util::Filter::type})
      *
@@ -271,6 +271,13 @@ public:
                                       dimensionCount(),
                                       filter);
     }
+    /**
+     * @brief Get all dimensions associated with this data array.
+     *
+     * Always uses filter that accepts all sources.
+     *
+     * @return The filtered dimensions as a vector
+     */
     std::vector<Dimension> dimensions() const
     {
         return dimensions(util::AcceptAll<Dimension>());
