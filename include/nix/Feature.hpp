@@ -14,7 +14,6 @@
 #include <nix/DataArray.hpp>
 
 #include <nix/Platform.hpp>
-#include <nix/valid/validate.hpp>
 
 namespace nix {
 
@@ -138,12 +137,6 @@ public:
      * @brief Destructor.
      */
     virtual ~Feature() {}
-    
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-    
-    valid::Result validate() const;
     
 };
 

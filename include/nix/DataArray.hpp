@@ -17,7 +17,6 @@
 #include <nix/Hydra.hpp>
 
 #include <nix/Platform.hpp>
-#include <nix/valid/validate.hpp>
 
 namespace nix {
 
@@ -490,25 +489,6 @@ public:
     }
 
     double applyPolynomial(std::vector<double> &coefficients, double origin, double input) const;
-
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-
-    valid::Result validate() {
-        valid::Result result_base = base::EntityWithSources<base::IDataArray>::validate();
-        valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-            valid::must(*this, &DataArray::dataType, valid::notEqual<DataType>(DataType::Nothing), "data type is not set!"),
-            valid::should(*this, &DataArray::dimensionCount, valid::isEqual<size_t>(dataExtent().size()), "data dimensionality does not match number of defined dimensions!"),
-            valid::must(*this, &DataArray::unit, valid::isValidUnit(), "Unit is not SI or composite of SI units."),
-            valid::could(*this, &DataArray::polynomCoefficients, valid::notEmpty(), {
-                valid::should(*this, &DataArray::expansionOrigin, valid::notFalse(), "polynomial coefficients for calibration are set, but expansion origin is missing") }),
-            valid::could(*this, &DataArray::expansionOrigin, valid::notFalse(), {
-                valid::should(*this, &DataArray::polynomCoefficients, valid::notEmpty(), "expansion origin for calibration is set, but polynomial coefficients are missing") }),
-        });
-        
-        return result.concat(result_base);
-    }
 
 };
 

@@ -19,7 +19,6 @@
 #include <nix/Property.hpp>
 #include <nix/DataType.hpp>
 #include <nix/Platform.hpp>
-#include <nix/valid/validate.hpp>
 
 namespace nix {
 
@@ -357,15 +356,6 @@ public:
      * @brief Output operator
      */
     friend std::ostream& operator<<(std::ostream &out, const Section &ent);
-    
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-    
-    valid::Result validate() const {
-        return base::NamedEntity<base::ISection>::validate();
-    }
-
 
 private:
 

@@ -18,7 +18,6 @@
 #include <nix/Feature.hpp>
 
 #include <nix/Platform.hpp>
-#include <nix/valid/validate.hpp>
 
 namespace nix {
 
@@ -371,12 +370,6 @@ public:
         out << ", id = " << ent.id() << "}";
         return out;
     }
-    
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-    
-    valid::Result validate() const;
     
 };
 

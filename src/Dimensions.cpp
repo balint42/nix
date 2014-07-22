@@ -92,12 +92,6 @@ Dimension& Dimension::operator=(const SetDimension &other) {
     return *this;
 }
 
-valid::Result Dimension::validate() const {
-    return valid::validate(std::initializer_list<valid::condition> {
-        valid::must(*this, &Dimension::index, valid::notSmaller(1), "index is not set to valid value (> 0)!")
-    });
-}
-
 //-------------------------------------------------------
 // Implementation of SampledDimension
 //-------------------------------------------------------
@@ -148,19 +142,6 @@ SampledDimension& SampledDimension::operator=(const Dimension &other) {
     return *this;
 }
 
-valid::Result SampledDimension::validate() const {
-    valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-        valid::must(*this, &SampledDimension::index, valid::notSmaller(1), "index is not set to valid value (size_t > 0)!"),
-        valid::must(*this, &SampledDimension::samplingInterval, valid::isGreater(0), "samplingInterval is not set to valid value (> 0)!"),
-        valid::must(*this, &SampledDimension::dimensionType, valid::isEqual<DimensionType>(DimensionType::Sample), "dimension type is not correct!"),
-        valid::could(*this, &SampledDimension::offset, valid::notFalse(), {
-            valid::should(*this, &SampledDimension::unit, valid::isAtomicUnit(), "offset is set, but no valid unit set!") }),
-        valid::could(*this, &SampledDimension::unit, valid::notFalse(), {
-            valid::must(*this, &SampledDimension::unit, valid::isAtomicUnit(), "Unit is set but not an atomic SI. Note: So far composite units are not supported!") })
-    });
-        
-    return result;
-}
 //-------------------------------------------------------
 // Implementation of SetDimension
 //-------------------------------------------------------
@@ -210,13 +191,6 @@ SetDimension& SetDimension::operator=(const Dimension &other) {
     return *this;
 }
 
-valid::Result SetDimension::validate() const {
-    return valid::validate(std::initializer_list<valid::condition> {
-        valid::must(*this, &SetDimension::index, valid::notSmaller(1), "index is not set to valid value (size_t > 0)!"),
-        valid::must(*this, &SetDimension::dimensionType, valid::isEqual<DimensionType>(DimensionType::Set), "dimension type is not correct!")
-    });
-}
-
 //-------------------------------------------------------
 // Implementation of RangeDimension
 //-------------------------------------------------------
@@ -264,19 +238,6 @@ RangeDimension& RangeDimension::operator=(const Dimension &other) {
     }
 
     return *this;
-}
-
-valid::Result RangeDimension::validate() const {
-    valid::Result result = valid::validate(std::initializer_list<valid::condition> {
-        valid::must(*this, &RangeDimension::index, valid::notSmaller(1), "index is not set to valid value (size_t > 0)!"),
-        valid::must(*this, &RangeDimension::ticks, valid::notEmpty(), "ticks are not set!"),
-        valid::must(*this, &RangeDimension::dimensionType, valid::isEqual<DimensionType>(DimensionType::Range), "dimension type is not correct!"),
-        valid::could(*this, &RangeDimension::unit, valid::notFalse(), {
-            valid::must(*this, &RangeDimension::unit, valid::isAtomicUnit(), "Unit is set but not an atomic SI. Note: So far composite units are not supported!") }),
-        valid::must(*this, &RangeDimension::ticks, valid::isSorted(), "Ticks are not sorted!")
-    });
-        
-    return result;
 }
 
 } // namespace nix

@@ -16,7 +16,6 @@
 #include <nix/Value.hpp>
 
 #include <nix/Platform.hpp>
-#include <nix/valid/validate.hpp>
 
 namespace nix {
 
@@ -204,12 +203,6 @@ public:
     }
 
     virtual ~Property() {}
-    
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-    
-    valid::Result validate();
 
 };
 

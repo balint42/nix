@@ -13,8 +13,6 @@
 #include <nix/base/IDimensions.hpp>
 #include <nix/Exception.hpp>
 
-#include <nix/valid/validate.hpp>
-
 namespace nix {
 
 class Dimension;
@@ -163,12 +161,6 @@ public:
      * @param other     The dimension to assign.
      */
     SampledDimension& operator=(const Dimension &other);
-    
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-    
-    valid::Result validate() const;
 
 };
 
@@ -261,12 +253,6 @@ public:
      * @param other     The dimension to assign.
      */
     SetDimension& operator=(const Dimension &other);
-    
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-    
-    valid::Result validate() const;
 
 };
 
@@ -390,12 +376,6 @@ public:
      * @param other     The dimension to assign.
      */
     RangeDimension& operator=(const Dimension &other);
-    
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-    
-    valid::Result validate() const;
 
 };
 
@@ -538,12 +518,6 @@ public:
      * @param other     The dimension to assign.
      */
     Dimension& operator=(const SetDimension &other);
-    
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-    
-    valid::Result validate() const;
 
 };
 

@@ -155,7 +155,7 @@ namespace valid {
         }
         
         return units;
-    };
+    }
 
 } // namespace valid
 } // namespace nix

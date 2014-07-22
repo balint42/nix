@@ -13,8 +13,6 @@
 #include <nix/base/IEntityWithMetadata.hpp>
 #include <nix/Section.hpp>
 
-#include <nix/valid/validate.hpp>
-
 namespace nix {
 namespace base {
 
@@ -94,14 +92,6 @@ public:
      */
     virtual ~EntityWithMetadata() {}
     
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-    
-    valid::Result validate() const {
-        return NamedEntity<T>::validate();
-    }
-
 };
 
 

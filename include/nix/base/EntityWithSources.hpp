@@ -13,8 +13,6 @@
 #include <nix/base/IEntityWithSources.hpp>
 #include <nix/Source.hpp>
 
-#include <nix/valid/validate.hpp>
-
 namespace nix {
 namespace base {
 
@@ -143,14 +141,6 @@ public:
      * Destructor
      */
     virtual ~EntityWithSources() {}
-    
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
-    
-    valid::Result validate() const {
-        return EntityWithMetadata<T>::validate();
-    }
 
 };
 
