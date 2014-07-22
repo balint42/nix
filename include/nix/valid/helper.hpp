@@ -26,7 +26,7 @@ namespace valid {
     struct NIXAPI Message {
         std::string id;
         std::string msg;
-        
+
         Message(std::string new_id, std::string new_msg)
         : id(new_id), msg(new_msg)
         {
@@ -131,9 +131,9 @@ namespace valid {
      * 
      * Helper function that gets all the units from all the dimensions
      * of the given DataArray and returns them as vector of strings.
-     * For all units not set (since boost::optional) and for all dims 
-     * that have no unit (since SetDimension) it inserts an empty string 
-     * so that the number of returned units matches the number of 
+     * For all units not set (since boost::optional) and for all dims
+     * that have no unit (since SetDimension) it inserts an empty string
+     * so that the number of returned units matches the number of
      * dimensions and indices correspond.
      */
     template<typename T>

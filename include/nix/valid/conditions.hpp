@@ -180,7 +180,7 @@ namespace valid {
             if(errOccured || !check(val)) { // failed || error
                 return Result();
             }
-    
+
             // passed
             Result result = Result();
             for(auto &sub : subs) {

@@ -34,7 +34,7 @@ Result validate(const DataArray &data_array) {
         could(data_array, &DataArray::expansionOrigin, notFalse(), {
             should(data_array, &DataArray::polynomCoefficients, notEmpty(), "expansion origin for calibration is set, but polynomial coefficients are missing!") })
     });
-    
+
     return result.concat(result_base);
 }
 
@@ -55,7 +55,7 @@ Result validate(const SimpleTag &simple_tag) {
         could(simple_tag, &SimpleTag::position, notEmpty(), {
             must(simple_tag, &SimpleTag::position, positionsMatchRefs<decltype(simple_tag.references())>(simple_tag.references()), "number of entries in position does not match number of dimensions in all referenced DataArrays!") })
     });
-        
+
     return result.concat(result_base);
 }
 
@@ -140,7 +140,7 @@ Result validate(const Feature &feature) {
         must(feature, &Feature::data, notFalse(), "data is not set!"),
         must(feature, &Feature::linkType, notSmaller(0), "linkType is not set!")
     });
-        
+
     return result.concat(result_base);
 }
 
@@ -161,6 +161,6 @@ Result validate(const File &file) {
             should(file, &File::location, notEmpty(), "location is not set!") })
     });
 }
-    
+
 } // namespace valid
 } // namespace nix
