@@ -10,7 +10,9 @@
 #define NIX_HELPER_H
 
 #include <string>
-#include "nix/Platform.hpp"
+#include <vector>
+#include <nix/base/IDimensions.hpp>
+#include <nix/Platform.hpp>
 
 namespace nix {
 namespace valid {
@@ -181,6 +183,37 @@ namespace valid {
         std::string get(TOBJ parent) {
             return std::string();
         }
+    };
+
+    /**
+     * @brief Helper getting the units from all dimensions of DataArray
+     * 
+     * Helper function that gets all the units from all the dimensions
+     * of the given DataArray and returns them as vector of strings.
+     * For all units not set (since boost::optional) and for all dims 
+     * that have no unit (since SetDimension) it inserts an empty string 
+     * so that the number of returned units matches the number of 
+     * dimensions and indices correspond.
+     */
+    template<typename T>
+    std::vector<std::string> getDimensionsUnits(T darray) {
+        std::vector<std::string> units;
+        
+        for(auto &dim : darray.dimensions()) {
+            if(dim.dimensionType() != DimensionType::Range) {
+                auto d = dim.asRangeDimension();
+                units.push_back(d.unit() ? *d.unit() : std::string());
+            }
+            if(dim.dimensionType() == DimensionType::Sample) {
+                auto d = dim.asRangeDimension();
+                units.push_back(d.unit() ? *d.unit() : std::string());
+            }
+            if(dim.dimensionType() == DimensionType::Set) {
+                units.push_back(std::string());
+            }
+        }
+        
+        return units;
     };
 
 } // namespace valid
