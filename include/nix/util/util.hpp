@@ -125,6 +125,32 @@ NIXAPI bool isCompoundSIUnit(const std::string &unit);
 NIXAPI bool isScalable(const std::string &unitA, const std::string &unitB);
 
 /**
+ * @brief Returns whether or not in all cases the units at the same
+ * index in the two given unit vectors are scalable versions of the same
+ * SI unit.
+ *
+ * @param unitsA A vector of unit strings.
+ * 
+ * @param unitsB A vector of unit strings.
+ *
+ * @return True if the units are scalable version of the same unit.
+ */
+NIXAPI bool isScalable(const std::vector<std::string> &unitsA, const std::vector<std::string> &unitsB);
+
+/**
+ * @brief Returns whether or not in all cases the strings at the same
+ * index in the two given string vectors are either both set or both
+ * not set (empty).
+ *
+ * @param stringsA A vector of unit strings.
+ * 
+ * @param stringsB A vector of unit strings.
+ *
+ * @return True if the units are scalable version of the same unit.
+ */
+NIXAPI bool isSetAtSamePos(const std::vector<std::string> &stringsA, const std::vector<std::string> &stringsB);
+
+/**
  * @brief Get the scaling between two SI units that are identified by the two strings.
  *
  * @param originUnit            The original unit
