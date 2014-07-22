@@ -16,6 +16,8 @@
 
 #include <nix/Platform.hpp>
 
+#include <nix/valid/validate.hpp>
+
 namespace nix {
 
 
@@ -326,7 +328,13 @@ public:
         nullify();
         return *this;
     }
-
+    
+    //------------------------------------------------------
+    // Validate
+    //------------------------------------------------------
+    
+    valid::Result validate() const;
+    
 };
 
 

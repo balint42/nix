@@ -22,7 +22,6 @@
 #include <cppunit/BriefTestProgressListener.h>
 
 #include <nix.hpp>
-#include <nix/valid/validate.hpp>
 
 using namespace nix;
 

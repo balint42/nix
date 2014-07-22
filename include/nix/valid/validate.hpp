@@ -12,93 +12,15 @@
 
 #include <nix/Platform.hpp>
 #include <nix/valid/result.hpp>
-#include <nix/valid/conditions.hpp>
 #include <cstdarg>
 
-#include <nix.hpp>
-
 namespace nix {
+
+class Block; class DataArray; class SimpleTag; class DataTag; class Property;
+class Dimension; class RangeDimension; class SetDimension; class SampledDimension;
+class Feature; class Section; class Source; class File;
+
 namespace valid {
-
-/**
-  * @brief Generic validator
-  * 
-  * Function taking a list of conditions that it will all execute and
-  * return the results as one merged {@link Result} object
-  *
-  * @param li initializer list of conditions
-  *
-  * @returns The validation results as {@link Result} object
-  */
-NIXAPI Result validate(const std::vector<condition> &li);
-
-/**
-  * @brief base entity validator
-  * 
-  * Function taking a base entity and returning {@link Result} object
-  *
-  * @param entity base entity
-  *
-  * @returns The validation results as {@link Result} object
-  */
-template<typename T>
-Result validate(const base::Entity<T> &entity) {
-    return validate({
-        must(entity, &base::Entity<T>::id, notEmpty(), "id is not set!"),
-        must(entity, &base::Entity<T>::createdAt, notFalse(), "date is not set!")
-    });
-}
-
-/**
-  * @brief base named entity validator
-  * 
-  * Function taking a base named entity and returning {@link Result}
-  * object
-  *
-  * @param named_entity base named entity
-  *
-  * @returns The validation results as {@link Result} object
-  */
-template<typename T>
-Result validate(const base::NamedEntity<T> &named_entity) {
-    Result result_base = validate(static_cast<base::Entity<T>>(named_entity));
-    Result result = validate({
-        must(named_entity, &base::NamedEntity<T>::name, notEmpty(), "no name set!"),
-        must(named_entity, &base::NamedEntity<T>::type, notEmpty(), "no type set!")
-    });
-        
-    return result.concat(result_base);
-}
-
-/**
-  * @brief base entity with metadata validator
-  * 
-  * Function taking a base entity with metadata and returning
-  * {@link Result} object
-  *
-  * @param entity_with_metadata base entity with metadata
-  *
-  * @returns The validation results as {@link Result} object
-  */
-template<typename T>
-Result validate(const base::EntityWithMetadata<T> &entity_with_metadata) {
-    return validate(static_cast<base::NamedEntity<T>>(entity_with_metadata));
-}
-
-/**
-  * @brief base entity with sources validator
-  * 
-  * Function taking a base entity with sources and returning
-  * {@link Result} object
-  *
-  * @param entity_with_sources base entity with sources
-  *
-  * @returns The validation results as {@link Result} object
-  */
-template<typename T>
-Result validate(const base::EntityWithSources<T> &entity_with_sources) {
-    return validate(static_cast<base::EntityWithMetadata<T>>(entity_with_sources));
-}
 
 /**
   * @brief Block entity validator
@@ -248,7 +170,7 @@ NIXAPI Result validate(const Source &source);
   *
   * @returns The validation results as {@link Result} object
   */
-NIXAPI Result validate(const nix::File &file);
+NIXAPI Result validate(const File &file);
 
 } // namespace valid
 } // namespace nix

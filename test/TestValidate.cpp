@@ -27,11 +27,7 @@ void TestValidate::tearDown() {
 }
 
 void TestValidate::test() {
-    Result myResult = validate(std::initializer_list<condition> {
-        must(block1, &Block::id, notEmpty(), "id is empty!"),
-        must(block2, &Block::id, isEmpty(), "id is not empty!"),
-        should(block2, &Block::id, isEmpty(), "id is not empty!")
-    });
+    valid::Result myResult = file.validate();
 
     cout << std::endl;
     cout << myResult;
