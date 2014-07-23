@@ -17,6 +17,7 @@
 #include <nix/valid/helper.hpp>
 #include <nix/valid/result.hpp>
 #include <nix/valid/checks.hpp>
+#include <nix/valid/validator.hpp>
 
 namespace nix {
 namespace valid {

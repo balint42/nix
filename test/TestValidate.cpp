@@ -11,7 +11,7 @@
 #include "TestValidate.hpp"
 #include <nix/valid/checks.hpp>
 #include <nix/valid/conditions.hpp>
-#include <nix/valid/base_validate.hpp>
+#include <nix/valid/validator.hpp>
 #include <nix/valid/validate.hpp>
 
 using namespace nix;

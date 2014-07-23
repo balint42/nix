@@ -6,7 +6,7 @@
 // modification, are permitted under the terms of the BSD License. See
 // LICENSE file in the root of the Project.
 
-#include <nix/valid/base_validate.hpp>
+#include <nix/valid/validator.hpp>
 #include <nix/valid/checks.hpp>
 #include <nix/valid/conditions.hpp>
 #include <nix/valid/result.hpp>
@@ -15,6 +15,83 @@
 
 namespace nix {
 namespace valid {
+
+// ---------------------------------------------------------------------
+// Templated, hidden validation utils that are only here in the cpp,
+// not in the header (hides them from user)
+// ---------------------------------------------------------------------
+
+/**
+  * @brief base entity validator
+  * 
+  * Function taking a base entity and returning {@link Result} object
+  *
+  * @param entity base entity
+  *
+  * @returns The validation results as {@link Result} object
+  */
+template<typename T>
+Result validate(const base::Entity<T> &entity) {
+    return validator({
+        must(entity, &base::Entity<T>::id, notEmpty(), "id is not set!"),
+        must(entity, &base::Entity<T>::createdAt, notFalse(), "date is not set!")
+    });
+}
+
+/**
+  * @brief base named entity validator
+  * 
+  * Function taking a base named entity and returning {@link Result}
+  * object
+  *
+  * @param named_entity base named entity
+  *
+  * @returns The validation results as {@link Result} object
+  */
+template<typename T>
+Result validate(const base::NamedEntity<T> &named_entity) {
+    Result result_base = validate<T>(static_cast<base::Entity<T>>(named_entity));
+    Result result = validator({
+        must(named_entity, &base::NamedEntity<T>::name, notEmpty(), "no name set!"),
+        must(named_entity, &base::NamedEntity<T>::type, notEmpty(), "no type set!")
+    });
+
+    return result.concat(result_base);
+}
+
+/**
+  * @brief base entity with metadata validator
+  * 
+  * Function taking a base entity with metadata and returning
+  * {@link Result} object
+  *
+  * @param entity_with_metadata base entity with metadata
+  *
+  * @returns The validation results as {@link Result} object
+  */
+template<typename T>
+Result validate(const base::EntityWithMetadata<T> &entity_with_metadata) {
+    return validate<T>(static_cast<base::NamedEntity<T>>(entity_with_metadata));
+}
+
+/**
+  * @brief base entity with sources validator
+  * 
+  * Function taking a base entity with sources and returning
+  * {@link Result} object
+  *
+  * @param entity_with_sources base entity with sources
+  *
+  * @returns The validation results as {@link Result} object
+  */
+template<typename T>
+Result validate(const base::EntityWithSources<T> &entity_with_sources) {
+    return validate<T>(static_cast<base::EntityWithMetadata<T>>(entity_with_sources));
+}
+
+// ---------------------------------------------------------------------
+// Regular validaton utils split in header & cpp part
+// ---------------------------------------------------------------------
 
 Result validate(const Block &block) {
     return validate(static_cast<base::EntityWithMetadata<base::IBlock>>(block));
