@@ -8,11 +8,15 @@
 
 #include <ctime>
 #include <functional>
-#include "TestValidate.hpp"
+
+#include <nix/valid/validator.hpp>
 #include <nix/valid/checks.hpp>
 #include <nix/valid/conditions.hpp>
-#include <nix/valid/validator.hpp>
 #include <nix/valid/validate.hpp>
+
+#include <nix.hpp>
+
+#include "TestValidate.hpp"
 
 using namespace nix;
 using namespace valid;

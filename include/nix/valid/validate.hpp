@@ -14,11 +14,9 @@
 #include <nix/valid/result.hpp>
 #include <cstdarg>
 
-namespace nix {
+#include <nix/types.hpp>
 
-class Block; class DataArray; class SimpleTag; class DataTag; class Property;
-class Dimension; class RangeDimension; class SetDimension; class SampledDimension;
-class Feature; class Section; class Source; class File;
+namespace nix {
 
 namespace valid {
 

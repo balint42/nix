@@ -103,8 +103,8 @@ Result validate(const DataArray &data_array) {
         must(data_array, &DataArray::dataType, notEqual<DataType>(DataType::Nothing), "data type is not set!"),
         should(data_array, &DataArray::dimensionCount, isEqual<size_t>(data_array.dataExtent().size()), "data dimensionality does not match number of defined dimensions!", {
             could(data_array, &DataArray::dimensions, notEmpty(), {
-                must(data_array, &DataArray::dimensions, dimTicksMatchData<DataArray>(data_array), "in some of the Range dimensions the number of ticks differs from the number of data entries along the corresponding data dimension!"),
-                must(data_array, &DataArray::dimensions, dimLabelsMatchData<DataArray>(data_array), "in some of the Set dimensions the number of labels differs from the number of data entries along the corresponding data dimension!") }) }),
+                must(data_array, &DataArray::dimensions, dimTicksMatchData(data_array), "in some of the Range dimensions the number of ticks differs from the number of data entries along the corresponding data dimension!"),
+                must(data_array, &DataArray::dimensions, dimLabelsMatchData(data_array), "in some of the Set dimensions the number of labels differs from the number of data entries along the corresponding data dimension!") }) }),
         must(data_array, &DataArray::unit, isValidUnit(), "Unit is not SI or composite of SI units."),
         could(data_array, &DataArray::polynomCoefficients, notEmpty(), {
             should(data_array, &DataArray::expansionOrigin, notFalse(), "polynomial coefficients for calibration are set, but expansion origin is missing!") }),
@@ -127,10 +127,10 @@ Result validate(const SimpleTag &simple_tag) {
         // check positions & extents
         could(simple_tag, &SimpleTag::extent, notEmpty(), {
             must(simple_tag, &SimpleTag::position, notEmpty(), "Extent is set but position is missing!"),
-            must(simple_tag, &SimpleTag::position, extentsMatchPositions<decltype(simple_tag.extent())>(simple_tag.extent()), "Number of entries in position and extent do not match!"),
-            must(simple_tag, &SimpleTag::extent, extentsMatchRefs<decltype(simple_tag.references())>(simple_tag.references()), "number of entries in extent does not match number of dimensions in all referenced DataArrays!") }),
+            must(simple_tag, &SimpleTag::position, extentsMatchPositions(simple_tag.extent()), "Number of entries in position and extent do not match!"),
+            must(simple_tag, &SimpleTag::extent, extentsMatchRefs(simple_tag.references()), "number of entries in extent does not match number of dimensions in all referenced DataArrays!") }),
         could(simple_tag, &SimpleTag::position, notEmpty(), {
-            must(simple_tag, &SimpleTag::position, positionsMatchRefs<decltype(simple_tag.references())>(simple_tag.references()), "number of entries in position does not match number of dimensions in all referenced DataArrays!") })
+            must(simple_tag, &SimpleTag::position, positionsMatchRefs(simple_tag.references()), "number of entries in position does not match number of dimensions in all referenced DataArrays!") })
     });
 
     return result.concat(result_base);
@@ -165,11 +165,11 @@ Result validate(const DataTag &data_tag) {
         must(data_tag, &DataTag::references, tagUnitsMatchRefsUnits(data_tag.units()), "Some of the referenced DataArrays' dimensions have units that are not convertible to the units set in tag. Note: So far composite SI units are not supported!"),
         // check positions & extents
         could(data_tag, &DataTag::extents, notFalse(), {
-            must(data_tag, &DataTag::positions, extentsMatchPositions<decltype(data_tag.extents())>(data_tag.extents()), "Number of entries in positions and extents do not match!") }),
+            must(data_tag, &DataTag::positions, extentsMatchPositions(data_tag.extents()), "Number of entries in positions and extents do not match!") }),
         could(data_tag, &DataTag::references, notEmpty(), {
             could(data_tag, &DataTag::extents, notFalse(), {
-                must(data_tag, &DataTag::extents, extentsMatchRefs<decltype(data_tag.references())>(data_tag.references()), "number of entries (in 2nd dim) in extents does not match number of dimensions in all referenced DataArrays!") }),
-            must(data_tag, &DataTag::positions, positionsMatchRefs<decltype(data_tag.references())>(data_tag.references()), "number of entries (in 2nd dim) in positions does not match number of dimensions in all referenced DataArrays!") })
+                must(data_tag, &DataTag::extents, extentsMatchRefs(data_tag.references()), "number of entries (in 2nd dim) in extents does not match number of dimensions in all referenced DataArrays!") }),
+            must(data_tag, &DataTag::positions, positionsMatchRefs(data_tag.references()), "number of entries (in 2nd dim) in positions does not match number of dimensions in all referenced DataArrays!") })
     });
 
     return result.concat(result_base);

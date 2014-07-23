@@ -10,10 +10,13 @@
 #define NIX_CHECKS_H
 
 #include <boost/optional.hpp>
+#include <boost/any.hpp>
 #include <nix/util/util.hpp>
 #include <nix/valid/helper.hpp>
 
 #include <nix/base/IDimensions.hpp>
+
+#include <nix/types.hpp>
 
 namespace nix {
 namespace valid {
@@ -209,16 +212,16 @@ namespace valid {
      * isAtomicUnit}, {@link isCompoundUnit}. Not viable on its own!
      */
     struct isUnit {
+        typedef std::function<bool(std::string)> TFUNC;
+        
         virtual bool operator()(const std::string &u) const = 0;
         
-        template<typename T>
-        bool operator()(const boost::optional<T> &u) const {
+        bool operator()(const boost::optional<std::string> &u) const {
             // note: relying on short-curcuiting here
             return u && (*this)(*u);
         }
-        
-        template<typename T>
-        bool operator()(const std::vector<std::string> &u, T obj) const {
+                
+        bool operator()(const std::vector<std::string> &u, TFUNC obj) const {
             // if test fails we have invalid unit & find_if_not will return it != end
             return std::find_if_not(u.begin(), u.end(), obj) != u.end();
         }
@@ -236,9 +239,8 @@ namespace valid {
         bool operator()(const std::string &u) const {
             return (util::isSIUnit(u) || util::isCompoundSIUnit(u));
         }
-        template<typename T>
-        bool operator()(const boost::optional<T> &u) const {
-            return isUnit::operator()<T>(u);
+        bool operator()(const boost::optional<std::string> &u) const {
+            return isUnit::operator()(u);
         }
         bool operator()(const std::vector<std::string> &u) const {
             return isUnit::operator()(u, *this);
@@ -257,9 +259,8 @@ namespace valid {
         bool operator()(const std::string &u) const {
             return util::isSIUnit(u);
         }
-        template<typename T>
-        bool operator()(const boost::optional<T> &u) const {
-            return isUnit::operator()<T>(u);
+        bool operator()(const boost::optional<std::string> &u) const {
+            return isUnit::operator()(u);
         }
         bool operator()(const std::vector<std::string> &u) const {
             return isUnit::operator()(u, *this);
@@ -278,9 +279,8 @@ namespace valid {
         bool operator()(const std::string &u) const {
             return util::isCompoundSIUnit(u);
         }
-        template<typename T>
-        bool operator()(const boost::optional<T> &u) const {
-            return isUnit::operator()<T>(u);
+        bool operator()(const boost::optional<std::string> &u) const {
+            return isUnit::operator()(u);
         }
         bool operator()(const std::vector<std::string> &u) const {
             return isUnit::operator()(u, *this);
@@ -292,9 +292,11 @@ namespace valid {
      * 
      * One Check struct that checks whether the given value can be
      * considered set, by applying {@link notFalse} and {@link notEmpty}
-     * checks. Value thus is set if: STL cotnainer not empty,
-     * bool is true, boost optional is set, number is not 0.
+     * checks. Value thus is set if: STL cotnainer not empty OR
+     * bool is true OR boost optional is set OR number is not 0.
      * Parameter can be of above types or even boost none_t.
+     * NOTE: use this if you don't know wheter a type has and "empty"
+     * method.
      */
     struct isSet {
         template<typename T>
@@ -327,14 +329,11 @@ namespace valid {
      * via "size" the method.
      */
     struct dimEquals {
-        const size_t value;
+        const size_t &value;
         
         dimEquals(const size_t &value) : value(value) {}
         
-        template<typename T>
-        bool operator()(const T &array) const {
-            return (array.dataExtent().size() == value);
-        }
+        bool operator()(const DataArray &array) const;
     };
 
     /**
@@ -352,25 +351,11 @@ namespace valid {
      * number of units in given unit vector.
      */
     struct tagRefsHaveUnits {
-        const std::vector<std::string> units;
+        const std::vector<std::string> &units;
         
         tagRefsHaveUnits(const std::vector<std::string> &units) : units(units) {}
         
-        template<typename T>
-        bool operator()(const std::vector<T> &references) const {
-            bool match = true;
-            std::vector<std::string> dims_units;
-            
-            for(auto &ref : references) {
-                dims_units = getDimensionsUnits(ref);
-                if(!util::isScalable(units, dims_units)) {
-                    match = false;
-                    break;
-                }
-            }
-            
-            return match;
-        }
+        bool operator()(const std::vector<DataArray> &references) const;
     };
 
     /**
@@ -388,25 +373,11 @@ namespace valid {
      * in a DataArray differs the number of units in the units vector.
      */
     struct tagUnitsMatchRefsUnits {
-        const std::vector<std::string> units;
+        const std::vector<std::string> &units;
         
         tagUnitsMatchRefsUnits(const std::vector<std::string> &units) : units(units) {}
         
-        template<typename T>
-        bool operator()(const std::vector<T> &references) const {
-            bool match = true;
-            std::vector<std::string> dims_units;
-            
-            for(auto &ref : references) {
-                dims_units = getDimensionsUnits(ref);
-                if(!util::isScalable(units, dims_units)) {
-                    match = false;
-                    break;
-                }
-            }
-            
-            return match;
-        }
+        bool operator()(const std::vector<DataArray> &references) const;
     };
 
     /**
@@ -416,29 +387,15 @@ namespace valid {
      * positions matches the given number of extents. It is irrelevant
      * which gets passed at construction time and which via operator().
      */
-    template<typename T1>
     struct extentsMatchPositions {
-        const T1 extents;
+        const boost::any extents;
         
-        extentsMatchPositions(const T1 &extents) : extents(extents) {}
-        
-        template<typename T2>
-        bool operator()(const T2 &positions) const {
-            // check that positions.dataExtent()[0] == extents.dataExtent()[0]
-            // and that   positions.dataExtent()[1] == extents.dataExtent()[1]
-            // and that   positions.dataExtent().size() == extents.dataExtent().size()
-            return positions.dataExtent() == extents.dataExtent();
-        }
-    };
-    template<>
-    struct extentsMatchPositions<std::vector<double>> {
-        const std::vector<double> extents;
+        extentsMatchPositions(const DataArray &extents) : extents(extents) {}
         
         extentsMatchPositions(const std::vector<double> &extents) : extents(extents) {}
         
-        bool operator()(const std::vector<double> &positions) const {
-            return positions.size() == extents.size();
-        }
+        bool operator()(const DataArray &positions) const;
+        bool operator()(const std::vector<double> &positions) const;
     };
 
     /**
@@ -449,37 +406,13 @@ namespace valid {
      * DataArray; if vector: size of vector) matches the given number of
      * dimensions in each of the given referenced DataArrays.
      */
-    template<typename T1>
     struct extentsMatchRefs {
-        const T1 refs;
+        const std::vector<DataArray> &refs;
         
-        extentsMatchRefs(const T1 &refs) : refs(refs) {}
+        extentsMatchRefs(const std::vector<DataArray> &refs) : refs(refs) {}
 
-        template<typename T2>
-        bool operator()(const T2 &extents) const {
-            bool mismatch = false;
-            auto extExtent = extents.dataExtent();
-            auto it = refs.begin();
-            while(!mismatch && (it != refs.end())) {
-                auto arrayExtent = (*it).dataExtent();
-                mismatch = extExtent[1] != arrayExtent.size();
-                ++it;
-            }
-            
-            return mismatch;
-        }
-        bool operator()(const std::vector<double> &extents) const {
-            bool mismatch = false;
-            auto extSize = extents.size();
-            auto it = refs.begin();
-            while(!mismatch && (it != refs.end())) {
-                auto arrayExtent = (*it).dataExtent();
-                mismatch = extSize != arrayExtent.size();
-                ++it;
-            }
-            
-            return mismatch;
-        }
+        bool operator()(const DataArray &extents) const;
+        bool operator()(const std::vector<double> &extents) const;
     };
 
     /**
@@ -492,18 +425,13 @@ namespace valid {
      * Note: this is just an alias for extentsMatchRefs wich does the
      * same thing.
      */
-    template<typename T1>
     struct positionsMatchRefs {
-        const T1 refs;
+        const std::vector<DataArray> &refs;
 
-        positionsMatchRefs(const T1 &refs) : refs(refs) {}
+        positionsMatchRefs(const std::vector<DataArray> &refs) : refs(refs) {}
     
-        template<typename T2>
-        bool operator()(const T2 &positions) const {
-            extentsMatchRefs<T1> alias = extentsMatchRefs<T1>(refs);
-            
-            return alias(positions);
-        }
+        bool operator()(const DataArray &positions) const;
+        bool operator()(const std::vector<double> &positions) const;
     };
 
     /**
@@ -514,27 +442,12 @@ namespace valid {
      * the given DataArray's data: number of ticks == number of entries
      * along the corresponding dimension in the data.
      */
-    template<typename T1>
     struct dimTicksMatchData {
-        const T1 data;
+        const DataArray &data;
 
-        dimTicksMatchData(const T1 &data) : data(data) {}
+        dimTicksMatchData(const DataArray &data) : data(data) {}
     
-        template<typename T2>
-        bool operator()(const T2 &dims) const {
-            bool mismatch = false;
-            auto it = dims.begin();
-            while(!mismatch && it != dims.end()) {
-                if((*it).dimensionType() == DimensionType::Range) {
-                    size_t dimIndex = (*it).index();
-                    auto dim = (*it).asRangeDimension();
-                    mismatch = dim.ticks().size() == data.dataExtent()[dimIndex];
-                }
-                ++it;
-            }
-            
-            return mismatch;
-        }
+        bool operator()(const std::vector<Dimension> &dims) const;
     };
 
     /**
@@ -545,29 +458,13 @@ namespace valid {
      * the given DataArray's data: number of labels == number of entries
      * along the corresponding dimension in the data.
      */
-    template<typename T1>
     struct dimLabelsMatchData {
-        const T1 data;
+        const DataArray &data;
 
-        dimLabelsMatchData(const T1 &data) : data(data) {}
+        dimLabelsMatchData(const DataArray &data) : data(data) {}
     
-        template<typename T2>
-        bool operator()(const T2 &dims) const {
-            bool mismatch = false;
-            auto it = dims.begin();
-            while(!mismatch && it != dims.end()) {
-                if((*it).dimensionType() == DimensionType::Set) {
-                    size_t dimIndex = (*it).index();
-                    auto dim = (*it).asSetDimension();
-                    mismatch = dim.labels().size() == data.dataExtent()[dimIndex];
-                }
-                ++it;
-            }
-            
-            return mismatch;
-        }
+        bool operator()(const std::vector<Dimension> &dims) const;
     };
-
 
 } // namespace valid
 } // namespace nix
