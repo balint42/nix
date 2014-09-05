@@ -1,0 +1,27 @@
+var classnix_1_1base_1_1_i_file =
+[
+    [ "~IFile", "d3/d02/classnix_1_1base_1_1_i_file.html#a8fc7f7f9ece5c8b1429644842e787124", null ],
+    [ "blockCount", "d3/d02/classnix_1_1base_1_1_i_file.html#a0f4cbbf848798ef2d61267c58374c485", null ],
+    [ "close", "d3/d02/classnix_1_1base_1_1_i_file.html#a0f69f7e98b238c29e0ebf54f9a50b02c", null ],
+    [ "createBlock", "d3/d02/classnix_1_1base_1_1_i_file.html#a074e9de91c1e76331a513b720e19dd72", null ],
+    [ "createdAt", "d3/d02/classnix_1_1base_1_1_i_file.html#a7d3e8f82779dc10f1d4cdf75b69470e8", null ],
+    [ "createSection", "d3/d02/classnix_1_1base_1_1_i_file.html#aee42de627d629c4fde084079a8c7c76d", null ],
+    [ "deleteBlock", "d3/d02/classnix_1_1base_1_1_i_file.html#a5cba5b149a14f91237cb9b1e6986d37d", null ],
+    [ "deleteSection", "d3/d02/classnix_1_1base_1_1_i_file.html#abe3b5a1896f30001d14aab08b27d45f7", null ],
+    [ "forceCreatedAt", "d3/d02/classnix_1_1base_1_1_i_file.html#a48b12d14f7af6e0b3f6816f8bbc5a8fe", null ],
+    [ "forceUpdatedAt", "d3/d02/classnix_1_1base_1_1_i_file.html#adb4d8bc3cd4f0e0c7993421638f5461e", null ],
+    [ "format", "d3/d02/classnix_1_1base_1_1_i_file.html#a4f9ed3c6ab85d1bbe36f6fea541fb958", null ],
+    [ "getBlock", "d3/d02/classnix_1_1base_1_1_i_file.html#ad9753b7d0c1f2da86764d81904aae76d", null ],
+    [ "getBlock", "d3/d02/classnix_1_1base_1_1_i_file.html#a358d95b985e2b72732d240463f2102f8", null ],
+    [ "getSection", "d3/d02/classnix_1_1base_1_1_i_file.html#afcc914b955b898dff0cb19984643e10d", null ],
+    [ "getSection", "d3/d02/classnix_1_1base_1_1_i_file.html#a1870d28f6d10ed608cf2cce15526b2ef", null ],
+    [ "hasBlock", "d3/d02/classnix_1_1base_1_1_i_file.html#aa1a1a02789fc0b8793f3ae7f3ab81723", null ],
+    [ "hasSection", "d3/d02/classnix_1_1base_1_1_i_file.html#a7939b96c750e2c7bec1989d837fa7256", null ],
+    [ "isOpen", "d3/d02/classnix_1_1base_1_1_i_file.html#a5109b413d173363e1894974ce4cfbadd", null ],
+    [ "location", "d3/d02/classnix_1_1base_1_1_i_file.html#a6a0a2d048503cd2830c469a77d70d7a1", null ],
+    [ "sectionCount", "d3/d02/classnix_1_1base_1_1_i_file.html#ab5f9cac6aed608607456f20fe84cad39", null ],
+    [ "setCreatedAt", "d3/d02/classnix_1_1base_1_1_i_file.html#a60b65822078a751b342ac0ff009f7d55", null ],
+    [ "setUpdatedAt", "d3/d02/classnix_1_1base_1_1_i_file.html#ab004e0399574f7a4cc583b23c673ab1e", null ],
+    [ "updatedAt", "d3/d02/classnix_1_1base_1_1_i_file.html#a59cd17f7d3f5adc9992effa5fe835e36", null ],
+    [ "version", "d3/d02/classnix_1_1base_1_1_i_file.html#a863a5e773740d4ae4d2f876d90899207", null ]
+];

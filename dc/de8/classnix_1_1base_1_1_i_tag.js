@@ -1,0 +1,25 @@
+var classnix_1_1base_1_1_i_tag =
+[
+    [ "~ITag", "dc/de8/classnix_1_1base_1_1_i_tag.html#ae35ee8358c46451829fc32038997f276", null ],
+    [ "addReference", "dc/de8/classnix_1_1base_1_1_i_tag.html#a1250f3f3d652e594f9d44ba8e895418d", null ],
+    [ "createFeature", "dc/de8/classnix_1_1base_1_1_i_tag.html#a147af441d78c0a7ab8429450ca1227b2", null ],
+    [ "deleteFeature", "dc/de8/classnix_1_1base_1_1_i_tag.html#ab56719d4d2906fb86cffd3abb9a03663", null ],
+    [ "extent", "dc/de8/classnix_1_1base_1_1_i_tag.html#a8580d3ab48f09dbf5d151ea32cc92bb7", null ],
+    [ "extent", "dc/de8/classnix_1_1base_1_1_i_tag.html#aaeddc7270e66d474c21c4152d218f855", null ],
+    [ "extent", "dc/de8/classnix_1_1base_1_1_i_tag.html#a8b9fa0345e825b13ac68defb12f611e6", null ],
+    [ "featureCount", "dc/de8/classnix_1_1base_1_1_i_tag.html#a82db903f4341466eebcda98bd67b0678", null ],
+    [ "getFeature", "dc/de8/classnix_1_1base_1_1_i_tag.html#a5d13bf5cb5eae9ee7894421db723193d", null ],
+    [ "getFeature", "dc/de8/classnix_1_1base_1_1_i_tag.html#a7d2fee7762cd1dadc1f75afca1bb9376", null ],
+    [ "getReference", "dc/de8/classnix_1_1base_1_1_i_tag.html#ae91941d7f8d45a1ac92af566ddba8ac9", null ],
+    [ "getReference", "dc/de8/classnix_1_1base_1_1_i_tag.html#ad2dd16ede43a78910a0ecb7d34ab8db8", null ],
+    [ "hasFeature", "dc/de8/classnix_1_1base_1_1_i_tag.html#a3b48053767adb0df11de7304e5e60365", null ],
+    [ "hasReference", "dc/de8/classnix_1_1base_1_1_i_tag.html#a194d3a2cd39e1af38b939199e83118e1", null ],
+    [ "position", "dc/de8/classnix_1_1base_1_1_i_tag.html#ae5aa4501b3574c6115c3a1dc63503c76", null ],
+    [ "position", "dc/de8/classnix_1_1base_1_1_i_tag.html#a6059d60fd7bf11746b20d98d8ca489c7", null ],
+    [ "referenceCount", "dc/de8/classnix_1_1base_1_1_i_tag.html#ae28bf63c055d58287749d680004c08b5", null ],
+    [ "references", "dc/de8/classnix_1_1base_1_1_i_tag.html#a5832225bf0db3abbef8d11f196ae0622", null ],
+    [ "removeReference", "dc/de8/classnix_1_1base_1_1_i_tag.html#a46982662dc4e0f33513ed7756886da89", null ],
+    [ "units", "dc/de8/classnix_1_1base_1_1_i_tag.html#ac7a534b4780908cc40139a1badb9b37c", null ],
+    [ "units", "dc/de8/classnix_1_1base_1_1_i_tag.html#a9dc209706a5968a6005373dddd0d2f04", null ],
+    [ "units", "dc/de8/classnix_1_1base_1_1_i_tag.html#a989b7b732644aed306ab1095d049ebbc", null ]
+];

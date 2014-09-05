@@ -1,0 +1,26 @@
+var classnix_1_1base_1_1_i_multi_tag =
+[
+    [ "~IMultiTag", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#ad50f60591d411cfcc9600fd5749fe1f3", null ],
+    [ "addReference", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#aba596eeafa7a6faf01555926e86bd22f", null ],
+    [ "createFeature", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#ae77fb40b1da46ab448b4d0af53948393", null ],
+    [ "deleteFeature", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#aec0e86d80e3926f6f56bd4fb9373b50d", null ],
+    [ "extents", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#a50eaf25f5132ce8014f1dcf32b7df6e0", null ],
+    [ "extents", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#a08bf17c7dbbbf2cb10532ef3b18a97d1", null ],
+    [ "extents", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#af861b3a8ab01e39147d07b0351407876", null ],
+    [ "featureCount", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#ae2c09bea486fe42cfed87a166bb342b7", null ],
+    [ "getFeature", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#a009083c5d21414ae1ba39dc4b377a09f", null ],
+    [ "getFeature", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#a638ed396c1bf1863284e614b88e83305", null ],
+    [ "getReference", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#ae083032276d9ec601350e6d0a56b732f", null ],
+    [ "getReference", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#a57d7f540b574c411adb835713a41e619", null ],
+    [ "hasFeature", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#a1a132a01cd52d19949ea6cb5c1aba71e", null ],
+    [ "hasPositions", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#a77b6acf7ca5b077f71cbef2ca501db33", null ],
+    [ "hasReference", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#a1e570d4993cf239d2793b173c9b11e89", null ],
+    [ "positions", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#aba3c37a082772f21eef74f252d36bf7b", null ],
+    [ "positions", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#ae365e2ff67c3c769465ae3d2c4458e5d", null ],
+    [ "referenceCount", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#ae80cea24802ce230018695aee217b10d", null ],
+    [ "references", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#a5d6f42cb7583f3635a95adece02783bc", null ],
+    [ "removeReference", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#aea4b4e22f4bb3b4bc84e2ec7210fa7bc", null ],
+    [ "units", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#afad03239b704188c301fd4e67b18d8f0", null ],
+    [ "units", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#a4f614fb64c2de35660005736922f1c8a", null ],
+    [ "units", "d5/d1c/classnix_1_1base_1_1_i_multi_tag.html#af666855ea082fb38b3db70ad1dc29b6c", null ]
+];
